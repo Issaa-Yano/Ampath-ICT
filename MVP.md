@@ -7,4 +7,3 @@
 4. User can delete a medication.
 
 5. All data is stored on the device; the app works offline.
-   (Any adjustments mnaweza ongeza)
