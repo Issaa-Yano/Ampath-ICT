@@ -8,3 +8,4 @@
 
 5. All data is stored on the device; the app works offline.
    (Any adjustments mnaweza ongeza)
+ 
