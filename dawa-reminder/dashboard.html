@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+     <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="user-info">
+            <h1>Hello, Andrew 👋</h1>
+            <p id="current-date">Jan 29, 2026</p>
+        </div>
+        <div class="profile-icon">
+            <span>AJ</span>
+        </div>
+        
+    </header>
+
+    <section class="progress-section">
+        <div class="progress-card">
+            <div class="progress-circle" style="--percent: 50">
+                <span>50%</span>
+            </div>
+            <div class="progress-text">
+                <h3>Daily Goals</h3>
+                <p>2 of 4 doses taken</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="medication-container">
+        <h2>Today's Schedule</h2>
+        
+        <div id="medication-list">
+            
+            <div class="med-card completed">
+                <div class="med-icon">💊</div>
+                <div class="med-details">
+                    <h3>Paracetamol</h3>
+                    <p>500mg • Taken at 8:00 AM</p>
+                </div>
+                <div class="med-status">✔</div>
+            </div>
+
+            <div class="med-card pending">
+                <div class="med-icon">💊</div>
+                <div class="med-details">
+                    <h3>Amoxil</h3>
+                    <p>1 Tablet • 2:00 PM</p>
+                </div>
+                <button class="btn-take">Take</button>
+            </div>
+
+        </div>
+    </main>
+
+    <button class="fab-add" onclick="openAddModal()">
+        +
+    </button>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">🏠 Home</a>
+        <a href="#" class="nav-item">📅 Calendar</a>
+        <a href="#" class="nav-item">⚙️ Settings</a>
+    </nav>
+
+</body>
+</html>
