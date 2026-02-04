@@ -1,0 +1,481 @@
+/* =========================
+   BASE / GLOBAL STYLES
+   Applies to all pages: Home, About, Dashboard, Login
+   ========================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* =========================
+   HEADER / DASHBOARD
+   ========================= */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: white;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+header .user-info h1 {
+  font-size: 1.5rem;
+}
+
+header .user-info p {
+  font-size: 0.875rem;
+  color: #f3f4f6;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  color: #6366f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar .nav-links li a {
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar .nav-links li a.active,
+.navbar .nav-links li a:hover {
+  color: #facc15;
+  font-weight: 600;
+}
+
+/* =========================
+   MAIN CONTENT / SECTIONS
+   ========================= */
+
+main, section {
+  padding: 1rem 2rem;
+}
+
+.section {
+  padding: 4rem 2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.light-bg {
+  background: #f9fafb;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899, #facc15);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-title.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-y 10s ease-in-out infinite;
+}
+
+.section-text {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   HERO SECTION
+   ========================= */
+
+.hero {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f3f4f6;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899, #facc15);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero h1.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-x 8s ease-in-out infinite;
+}
+
+.hero p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+/* =========================
+   FEATURES GRID
+   ========================= */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+.btn-take {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-take:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   LOGIN / SIGNUP PAGE
+   ========================= */
+
+.auth-container {
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  width: 90%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  color: white;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #f3f4f6;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.toggle-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #f3f4f6;
+}
+
+.toggle-link {
+  color: #facc15;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.error-msg {
+  color: #f87171;
+  font-size: 14px;
+  margin-top: 10px;
+  min-height: 1em;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: white;
+  font-size: 0.875rem;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+
+/* =========================
+   PROGRESS SECTION
+   ========================= */
+
+.progress-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+
+.progress-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #6366f1 calc(var(--percent) * 1%),
+    #e5e7eb 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* =========================
+   MEDICATION CARDS
+   ========================= */
+
+.med-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.med-icon {
+  font-size: 1.5rem;
+}
+
+.med-details h3 {
+  margin-bottom: 0.25rem;
+}
+
+.med-details p {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* =========================
+   FLOATING ACTION BUTTON
+   ========================= */
+
+.fab-add {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fab-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   BOTTOM NAV
+   ========================= */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  padding: 0.5rem 0;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  transition: color 0.3s;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  color: #facc15;
+  font-weight: 600;
+}
+
+/* =========================
+   GRADIENT ANIMATIONS
+   ========================= */
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes gradient-y {
+  0%, 100% { background-position: 50% 0%; }
+  50% { background-position: 50% 100%; }
+}
+
+@keyframes gradient-xy {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 15s ease-in-out infinite;
+}
+
+.animate-gradient-y {
+  background-size: 200% 200%;
+  animation: gradient-y 20s ease-in-out infinite;
+}
+
+.animate-gradient-xy {
+  background-size: 200% 200%;
+  animation: gradient-xy 25s ease-in-out infinite;
+}
+
+.bg-gradient-dynamic {
+  background-image: linear-gradient(270deg, #6366f1, #ec4899, #facc15);
+}
+
+.bg-gradient-dynamic-alt {
+  background-image: linear-gradient(270deg, #4ade80, #3b82f6, #9333ea);
+}
+
+/* Dark mode */
+.dark .bg-gradient-dynamic {
+  background-image: linear-gradient(270deg, #3730a3, #be185d, #ca8a04);
+}
+
+.dark .bg-gradient-dynamic-alt {
+  background-image: linear-gradient(270deg, #15803d, #1e40af, #581c87);
+}
