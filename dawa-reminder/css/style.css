@@ -91,6 +91,111 @@ header .user-info p {
   font-weight: 600;
 }
 
+/* Small utilities for header + nav */
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: white;
+}
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-auth {
+  margin-left: auto;
+}
+
+/* Re-usable button styles */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-brand h3 { margin: 0 0 0.25rem 0; }
+.footer-brand p { margin: 0; color: rgba(255,255,255,0.85); }
+.footer-copy { color: rgba(255,255,255,0.85); margin-top: 0.5rem; }
+
+.btn-primary {
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+}
+
+/* HERO LAYOUT */
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero-text { flex: 1; text-align: left; }
+.hero-visual { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+/* PHONE MOCKUP & NOTIFICATIONS */
+.phone-mockup {
+  width: 220px;
+  height: 420px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff, #f3f4f6);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 16px;
+}
+.phone-screen { background: #fff; border-radius: 12px; padding: 12px; height: 100%; overflow: auto; }
+.notification-card { background: #f8fafc; padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+.notification-time { font-size: 0.75rem; color: #6b7280; }
+.notification-title { font-weight: 600; color: #111827; }
+.notification-text { font-size: 0.875rem; color: #6b7280; }
+
+/* STEPS / HOW IT WORKS */
+.steps { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+.step { background: #fff; padding: 1rem; border-radius: 12px; text-align: center; width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.step-number { background: #f3f4f6; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 8px; }
+
+/* CTA */
+.cta-section { text-align: center; padding: 2.5rem; background: #fff; margin: 2rem 0; border-radius: 12px; }
+
+/* Footer small fixes */
+.footer .footer-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.footer-wrapper { display: flex; gap: 2rem; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+
+/* Progress text */
+.progress-text h3 { margin: 0; }
+.progress-text p { margin: 0; color: #6b7280; }
+
+/* Medication states */
+.med-card.completed { opacity: 0.6; }
+.med-card.pending button.btn-take { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+/* Team grid */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.team-card { background: #fff; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+
+/* Utility */
+.center { text-align: center; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-content { flex-direction: column; text-align: center; }
+  .hero-text { text-align: center; }
+  .nav-links { gap: 0.75rem; }
+  .footer-wrapper { flex-direction: column; align-items: center; }
+}
+
 /* =========================
    MAIN CONTENT / SECTIONS
    ========================= */
@@ -254,13 +359,17 @@ input::placeholder {
   position: relative;
 }
 
-.password-wrapper i {
+/* Make eye icons pure white and target both login/signup instances */
+.password-wrapper i,
+#eye-login,
+#eye-signup {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #f3f4f6;
+  color: #ffffff; /* pure white */
+  font-size: 1rem;
 }
 
 button[type="submit"] {
@@ -332,18 +441,39 @@ button[type="submit"]:hover {
 }
 
 .progress-circle {
+  --percent: 0; /* default */
   width: 70px;
   height: 70px;
   border-radius: 50%;
   background: conic-gradient(
     #6366f1 calc(var(--percent) * 1%),
-    #e5e7eb 0
+    #e5e7eb calc(var(--percent) * 1%)
   );
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
 }
+
+/* Small layout helpers */
+.progress-section { padding: 1rem 2rem; }
+.progress-section .progress-card { max-width: 900px; margin: 0 auto; }
+
+.medication-container { padding: 1rem 2rem; }
+.med-status { font-size: 1.25rem; color: #10b981; font-weight: 700; }
+
+/* Dashboard header (keeps same look as header) */
+.dashboard-header {
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: white;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 
 /* =========================
    MEDICATION CARDS
@@ -478,4 +608,31 @@ button[type="submit"]:hover {
 
 .dark .bg-gradient-dynamic-alt {
   background-image: linear-gradient(270deg, #15803d, #1e40af, #581c87);
+}
+
+/* Eye Icon Positioning */
+.password-wrapper { position: relative; }
+
+/* Strongly enforce white for eye icons (selectors + svg fill) */
+.password-wrapper i,
+#eye-login,
+#eye-signup,
+.fa-solid.fa-eye,
+.fa-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ffffff !important; /* force white */
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* If Font Awesome injects SVGs or child elements, make sure their fill is white */
+.password-wrapper i *,
+#eye-login *,
+#eye-signup * {
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
