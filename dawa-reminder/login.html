@@ -4,30 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Dawa Reminder</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Responsive Styling */
-        body { font-family: 'Poppins', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .auth-container { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); text-align: center; }
-        .input-group { margin-bottom: 20px; text-align: left; position: relative; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; }
-        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        
-        /* Eye Icon Positioning */
-        .password-wrapper { position: relative; }
-        .password-wrapper i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666; }
-        
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #0056b3; }
-        
-        .toggle-text { margin-top: 15px; font-size: 14px; }
-        .toggle-link { color: #007bff; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; font: inherit; }
-        .error-msg { color: #d9534f; font-size: 14px; margin-top: 10px; min-height: 1em; }
-    </style>
+    
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome for eye icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnH2N2pa3L9/Z4g0cR+y3mZ7p+V2fRy8mHVhP7fDfR0H0e13+VQK5d4R7MEHYNuB3Qn4vYMGw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
 <div class="auth-container">
+    <!-- LOGIN SECTION -->
     <div id="login-section">
         <h2>Sign In</h2>
         <form id="login-form">
@@ -44,9 +31,12 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <p class="toggle-text">New here? <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Create Account</a></p>
+        <p class="toggle-text">New here? 
+            <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Create Account</a>
+        </p>
     </div>
 
+    <!-- SIGNUP SECTION -->
     <div id="signup-section" style="display:none;">
         <h2>Create Account</h2>
         <form id="signup-form">
@@ -63,7 +53,9 @@
             </div>
             <button type="submit">Register</button>
         </form>
-        <p class="toggle-text">Have an account? <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Sign In</a></p>
+        <p class="toggle-text">Have an account? 
+            <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Sign In</a>
+        </p>
     </div>
     
     <p id="error-message" class="error-msg"></p>
@@ -71,6 +63,7 @@
 
 <script type="module" src="auth.js"></script>
 <script>
+    // Toggle between login and signup forms
     function toggleAuth() {
         const login = document.getElementById('login-section');
         const signup = document.getElementById('signup-section');
@@ -79,6 +72,46 @@
         login.style.display = login.style.display === 'none' ? 'block' : 'none';
         signup.style.display = signup.style.display === 'none' ? 'block' : 'none';
     }
+
+    // Toggle password visibility
+    function setupPasswordToggle(inputId, eyeId) {
+        const input = document.getElementById(inputId);
+        const eye = document.getElementById(eyeId);
+        eye.addEventListener('click', () => {
+            if(input.type === 'password') {
+                input.type = 'text';
+                eye.classList.remove('fa-eye');
+                eye.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eye.classList.remove('fa-eye-slash');
+                eye.classList.add('fa-eye');
+            }
+        });
+    }
+
+    setupPasswordToggle('login-password', 'eye-login');
+    setupPasswordToggle('signup-password', 'eye-signup');
 </script>
+
+<footer class="footer">
+    <div class="container footer-wrapper">
+        <div class="footer-brand">
+            <h3>💊 Dawa Reminder</h3>
+            <p>Helping AMPATH patients stay on track with their medication.</p>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="about.html">About</a>
+            <a href="login.html">Sign In</a>
+        </div>
+
+        <div class="footer-copy">
+            <p>© 2026 Dawa Reminder | Built for AMPATH Healthcare</p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
