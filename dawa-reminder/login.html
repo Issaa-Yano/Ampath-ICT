@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Dawa Reminder</title>
+    
+    <!-- Global CSS -->
     <link rel="stylesheet" href="css/style.css">
-   
+    
+    <!-- Font Awesome for eye icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnH2N2pa3L9/Z4g0cR+y3mZ7p+V2fRy8mHVhP7fDfR0H0e13+VQK5d4R7MEHYNuB3Qn4vYMGw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
 <div class="auth-container">
+    <!-- LOGIN SECTION -->
     <div id="login-section">
         <h2>Sign In</h2>
         <form id="login-form">
@@ -26,9 +31,12 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <p class="toggle-text">New here? <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Create Account</a></p>
+        <p class="toggle-text">New here? 
+            <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Create Account</a>
+        </p>
     </div>
 
+    <!-- SIGNUP SECTION -->
     <div id="signup-section" style="display:none;">
         <h2>Create Account</h2>
         <form id="signup-form">
@@ -45,7 +53,9 @@
             </div>
             <button type="submit">Register</button>
         </form>
-        <p class="toggle-text">Have an account? <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Sign In</a></p>
+        <p class="toggle-text">Have an account? 
+            <a href="javascript:void(0)" class="toggle-link" onclick="toggleAuth()">Sign In</a>
+        </p>
     </div>
     
     <p id="error-message" class="error-msg"></p>
@@ -53,6 +63,7 @@
 
 <script type="module" src="auth.js"></script>
 <script>
+    // Toggle between login and signup forms
     function toggleAuth() {
         const login = document.getElementById('login-section');
         const signup = document.getElementById('signup-section');
@@ -61,17 +72,35 @@
         login.style.display = login.style.display === 'none' ? 'block' : 'none';
         signup.style.display = signup.style.display === 'none' ? 'block' : 'none';
     }
+
+    // Toggle password visibility
+    function setupPasswordToggle(inputId, eyeId) {
+        const input = document.getElementById(inputId);
+        const eye = document.getElementById(eyeId);
+        eye.addEventListener('click', () => {
+            if(input.type === 'password') {
+                input.type = 'text';
+                eye.classList.remove('fa-eye');
+                eye.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eye.classList.remove('fa-eye-slash');
+                eye.classList.add('fa-eye');
+            }
+        });
+    }
+
+    setupPasswordToggle('login-password', 'eye-login');
+    setupPasswordToggle('signup-password', 'eye-signup');
 </script>
+
 <footer class="footer">
     <div class="container footer-wrapper">
-
-        <!-- Brand -->
         <div class="footer-brand">
             <h3>💊 Dawa Reminder</h3>
             <p>Helping AMPATH patients stay on track with their medication.</p>
         </div>
 
-        <!-- Footer Links -->
         <div class="footer-links">
             <a href="index.html">Home</a>
             <a href="dashboard.html">Dashboard</a>
@@ -79,11 +108,9 @@
             <a href="login.html">Sign In</a>
         </div>
 
-        <!-- Copyright -->
         <div class="footer-copy">
             <p>© 2026 Dawa Reminder | Built for AMPATH Healthcare</p>
         </div>
-
     </div>
 </footer>
 </body>
