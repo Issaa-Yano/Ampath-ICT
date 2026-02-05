@@ -1,129 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediRemind - Never Miss a Dose</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediReminder - Never Miss a Dose</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-    <nav>
-        <div class="logo">MediRemind</div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="login.html">Sign In</a></li>
-        </ul>
-    </nav>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">DawaReminder    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="login.html" class ="btn btn-primary">Sign In</a></li>
+    </ul>
+  </nav>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-
-            <div class="hero-text">
-                <h1>Never miss <span>a dose</span> again</h1>
-                <p>
-                    Smart medication reminders powered by care.
-                    Built for AMPATH patients and healthcare providers
-                    to ensure every dose counts.
-                </p>
-                <a href="#">Get Started Free</a>
-            </div>
-
-            <div class="hero-visual">
-                <div class="phone-mockup">
-                    <div class="phone-screen">
-
-                        <div class="notification-card">
-                            <div class="notification-time">8:00 AM</div>
-                            <div class="notification-title">Time for your medication</div>
-                            <div class="notification-text">
-                                Metformin 500mg - Take with breakfast
-                            </div>
-                        </div>
-
-                        <div class="notification-card">
-                            <div class="notification-time">2:00 PM</div>
-                            <div class="notification-title">Afternoon reminder</div>
-                            <div class="notification-text">
-                                Lisinopril 10mg - After lunch
-                            </div>
-                        </div>
-
-                        <div class="notification-card">
-                            <div class="notification-time">9:00 PM</div>
-                            <div class="notification-title">Evening dose</div>
-                            <div class="notification-text">
-                                Atorvastatin 20mg - Before bed
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="how-it-works" id="how-it-works">
-        <h2>How It Works</h2>
-        <p>Three simple steps to better medication adherence</p>
-
-        <div class="steps">
-
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Create Your Profile</h3>
-                <p>
-                    Sign up in seconds and add your medications.
-                    Enter dosage times, frequencies, and instructions.
-                </p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Get Smart Reminders</h3>
-                <p>
-                    Receive timely reminders via SMS, email,
-                    or app notifications.
-                </p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Track Your Progress</h3>
-                <p>
-                    Monitor adherence and share reports
-                    with your healthcare provider.
-                </p>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="cta-section">
-        <h2>Ready to take control of your health?</h2>
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Never miss <span>a dose</span> again</h1>
         <p>
-            Join thousands of patients using MediRemind
-            to stay on track with their medication schedules.
+          Smart medication reminders powered by care.
+          Built for AMPATH patients and healthcare providers
+          to ensure every dose counts.
         </p>
+        <!-- Hero Button -->
+        <a href="login.html" class="btn btn-primary">Get Started Free</a>
+      </div>
+    </div>
+  </section>
 
-        <a href="#">Start Free Today</a>
-        <a href="#about">Learn More</a>
-    </section>
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works section light-bg" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-text">Three simple steps to better medication adherence</p>
 
-    <footer>
-        <div class="footer-links">
-            <a href="#about">About Us</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact</a>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>📝 Create Your Profile</h3>
+          <p>
+            Sign up in seconds and add your medications.
+            Enter dosage times, frequencies, and instructions.
+          </p>
         </div>
 
-        <p>&copy; 2026 MediRemind. A project by AMPATH.</p>
-    </footer>
+        <div class="feature-card">
+          <h3>⏰ Get Smart Reminders</h3>
+          <p>
+            Receive timely reminders via SMS, email,
+            or app notifications.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>📊 Track Your Progress</h3>
+          <p>
+            Monitor adherence and share reports
+            with your healthcare provider.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT HELPS -->
+  <section class="section light-bg" id="how-it-helps">
+    <div class="container">
+      <h2 class="section-title">How Dawa Reminder Helps</h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>⏰ Timely Reminders</h3>
+          <p>Patients receive reminders so they never miss a dose.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>📋 Medication Tracking</h3>
+          <p>View all prescribed medications and schedules in one place.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>❤️ Better Adherence</h3>
+          <p>Consistent medication leads to better health outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="cta-section section">
+    <h2 class="section-title">Ready to take control of your health?</h2>
+    <p class="section-text">
+      Join thousands of patients using MediReminder
+      to stay on track with their medication schedules.
+    </p>
+
+    <!-- CTA Buttons -->
+    <a href="login.html" class="btn btn-primary">Start Free Today</a>
+    <a href="about.html" class="btn btn-secondary">Learn More</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-wrapper">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <h3>💊 Dawa Reminder</h3>
+        <p>Helping AMPATH patients stay on track with their medication.</p>
+      </div>
+
+      <!-- Footer Links -->
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="about.html">About</a>
+        <a href="login.html">Sign In</a>
+      </div>
+
+      <!-- Copyright -->
+      <div class="footer-copy">
+        <p>© 2026 Dawa Reminder | Built for AMPATH Healthcare</p>
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>
