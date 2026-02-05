@@ -1,119 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediReminder - Never Miss a Dose</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediRemind - Never Miss a Dose</title>
+
+<style>
+/* ===== BACKGROUND SLIDESHOW ONLY ===== */
+.background-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300%; /* 3 images in a row */
+    height: 100vh;
+    display: flex;
+    animation: slide-step 9s infinite; /* 3 images x 3s each */
+    z-index: -2; /* behind all content */
+}
+
+.background-slideshow .slide {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+}
+
+.background-slideshow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== STEP ANIMATION ===== */
+@keyframes slide-step {
+    0%, 33% { transform: translateX(0); }        /* first image 3s */
+    34%, 66% { transform: translateX(-100vw); } /* second image 3s */
+    67%, 100% { transform: translateX(-200vw); }/* third image 3s */
+}
+</style>
+
 </head>
-<body>
+<body style="margin:0; padding:0; overflow-x:hidden;">
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="index.html" class="nav-logo">DawaReminder    </a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="login.html" class ="btn btn-primary">Sign In</a></li>
-    </ul>
-  </nav>
+<!-- ===== BACKGROUND SLIDESHOW ===== -->
+<div class="background-slideshow">
+    <div class="slide">
+        <img src="assets/background.jpg.jpeg" alt="Background 1">
+    </div>
+    <div class="slide">
+        <img src="assets/background.p.jpeg" alt="Background 2">
+    </div>
+    <div class="slide">
+        <img src="assets/backgrounnd.jpg.jpeg" alt="Background 3">
+    </div>
+</div>
 
-  <!-- HERO SECTION -->
-  <section class="hero" id="home">
+<!-- ===== YOUR EXISTING CONTENT ===== -->
+<header class="navbar" style="position:relative; z-index:1;">
+    <div class="container nav-wrapper">
+        <div class="logo">
+            <a href="index.html">💊 Dawa Reminder</a>
+        </div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+        <div class="nav-auth">
+            <a href="login.html" class="btn btn-primary">Sign In</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero" id="home" style="position:relative; z-index:1; background:rgba(255,255,255,0.85);">
     <div class="hero-content">
-      <div class="hero-text">
-        <h1>Never miss <span>a dose</span> again</h1>
-
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>📝 Create Your Profile</h3>
-          <p>
-            Sign up in seconds and add your medications.
-            Enter dosage times, frequencies, and instructions.
-          </p>
+        <div class="hero-text">
+            <h1>Never miss a dose again</h1>
+            <p>
+                Smart medication reminders powered by care.
+                Built for AMPATH patients and healthcare providers
+                to ensure every dose counts.
+            </p>
+            <a href="#">Get Started Free</a>
         </div>
-
-        <div class="feature-card">
-          <h3>⏰ Get Smart Reminders</h3>
-          <p>
-            Receive timely reminders via SMS, email,
-            or app notifications.
-          </p>
+        <div class="hero-visual">
+            <!-- Your phone mockup here -->
         </div>
-
-        <div class="feature-card">
-          <h3>📊 Track Your Progress</h3>
-          <p>
-            Monitor adherence and share reports
-            with your healthcare provider.
-          </p>
-        </div>
-      </div>
     </div>
-  </section>
+</section>
 
-  <!-- HOW IT HELPS -->
-  <section class="section light-bg" id="how-it-helps">
-    <div class="container">
-      <h2 class="section-title">How Dawa Reminder Helps</h2>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>⏰ Timely Reminders</h3>
-          <p>Patients receive reminders so they never miss a dose.</p>
+<section class="how-it-works" style="position:relative; z-index:1; background:rgba(255,255,255,0.85);">
+    <h2>How It Works</h2>
+    <p>Three simple steps to better medication adherence</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Create Your Profile</h3>
+            <p>Sign up in seconds and add your medications. Enter dosage times, frequencies, and instructions.</p>
         </div>
-
-        <div class="feature-card">
-          <h3>📋 Medication Tracking</h3>
-          <p>View all prescribed medications and schedules in one place.</p>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Get Smart Reminders</h3>
+            <p>Receive timely reminders via SMS, email, or app notifications.</p>
         </div>
-
-        <div class="feature-card">
-          <h3>❤️ Better Adherence</h3>
-          <p>Consistent medication leads to better health outcomes.</p>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Track Your Progress</h3>
+            <p>Monitor adherence and share reports with your healthcare provider.</p>
         </div>
-      </div>
     </div>
-  </section>
+</section>
 
-  <!-- CTA SECTION -->
-  <section class="cta-section section">
-    <h2 class="section-title">Ready to take control of your health?</h2>
-    <p class="section-text">
-      Join thousands of patients using MediReminder
-      to stay on track with their medication schedules.
-    </p>
+<section class="cta-section" style="position:relative; z-index:1; background:rgba(255,255,255,0.85);">
+    <h2>Ready to take control of your health?</h2>
+    <p>Join thousands of patients using MediRemind to stay on track with their medication schedules.</p>
+    <a href="#">Start Free Today</a>
+    <a href="#about">Learn More</a>
+</section>
 
-    <!-- CTA Buttons -->
-    <a href="login.html" class="btn btn-primary">Start Free Today</a>
-    <a href="about.html" class="btn btn-secondary">Learn More</a>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
+<footer class="footer" style="position:relative; z-index:1; background:rgba(255,255,255,0.9);">
     <div class="container footer-wrapper">
-      <!-- Brand -->
-      <div class="footer-brand">
-        <h3>💊 Dawa Reminder</h3>
-        <p>Helping AMPATH patients stay on track with their medication.</p>
-      </div>
-
-      <!-- Footer Links -->
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="about.html">About</a>
-        <a href="login.html">Sign In</a>
-      </div>
-
-      <!-- Copyright -->
-      <div class="footer-copy">
-        <p>© 2026 Dawa Reminder | Built for AMPATH Healthcare</p>
-      </div>
+        <div class="footer-brand">
+            <h3>💊 Dawa Reminder</h3>
+            <p>Helping AMPATH patients stay on track with their medication.</p>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="about.html">About</a>
+            <a href="login.html">Sign In</a>
+        </div>
+        <div class="footer-copy">
+            <p>© 2026 Dawa Reminder | Built for AMPATH Healthcare</p>
+        </div>
     </div>
-  </footer>
+</footer>
 
 </body>
 </html>
