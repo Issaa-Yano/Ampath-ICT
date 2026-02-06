@@ -3,78 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Nimeza Patient App</title>
+    <link rel="stylesheet" href="css/app-style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="dashboard-header">
-        <div class="user-info">
-            <h1>Hello, Andrew 👋</h1>
-            <p id="current-date">Jan 29, 2026</p>
-        </div>
-        <div class="profile-icon">
-            <span>AJ</span>
-        </div>
-        
-    </header>
 
-    <section class="progress-section">
-        <div class="progress-card">
-            <div class="progress-circle" style="--percent: 50">
-                <span>50%</span>
-            </div>
-            <div class="progress-text">
-                <h3>Daily Goals</h3>
-                <p>2 of 4 doses taken</p>
-            </div>
-        </div>
-    </section>
-
-    <main class="medication-container">
-        <h2>Today's Schedule</h2>
-        
-        <div id="medication-list">
-            
-            <div class="med-card completed">
-                <div class="med-icon">💊</div>
-                <div class="med-details">
-                    <h3>Paracetamol</h3>
-                    <p>500mg • Taken at 8:00 AM</p>
+<div class="app-container">
+    
+    <div id="view-dashboard">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="user-greeting">
+                    <h1 id="greeting">Hello, Patient 👋</h1>
+                    <p id="doses-remaining">Loading...</p>
                 </div>
-                <div class="med-status">✔</div>
+                <div class="profile-pic">AJ</div>
             </div>
 
-            <div class="med-card pending">
-                <div class="med-icon">💊</div>
-                <div class="med-details">
-                    <h3>Amoxil</h3>
-                    <p>1 Tablet • 2:00 PM</p>
+            <div class="progress-card">
+                <div class="progress-info">
+                    <h3>Your Progress</h3>
+                    <p id="progress-percent">0%</p>
                 </div>
-                <button class="btn-take">Take</button>
+                <div class="ring-wrapper">
+                    <svg width="80" height="80">
+                        <circle cx="40" cy="40" r="30" class="ring-bg"></circle>
+                        <circle cx="40" cy="40" r="30" class="ring-progress" id="progress-ring"></circle>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <main class="schedule-container">
+            <div class="section-head">
+                <h2>Today's Schedule</h2>
+                <span id="current-date" class="date-badge">Today</span>
             </div>
 
+            <div id="schedule-list"></div>
+        </main>
+
+        <button class="fab" onclick="switchView('add')">
+            <i class="ph-bold ph-plus"></i>
+        </button>
+        
+        <nav class="bottom-nav">
+            <a href="#" class="active"><i class="ph-fill ph-house"></i></a>
+            <a href="#"><i class="ph ph-chart-bar"></i></a>
+            <a href="#"><i class="ph ph-user"></i></a>
+        </nav>
+    </div>
+
+    <div id="view-add" class="hidden">
+        <div class="form-header">
+            <button class="back-btn" onclick="switchView('dashboard')">
+                <i class="ph-bold ph-arrow-left"></i>
+            </button>
+            <h2>Add Medication</h2>
         </div>
-    </main>
 
-    <button class="fab-add" onclick="openAddModal()">
-        +
-    </button>
+        <form id="add-med-form">
+            <div class="form-group">
+                <label>Medication Name</label>
+                <div class="input-wrapper">
+                    <i class="ph ph-pill"></i>
+                    <input type="text" id="med-name" placeholder="e.g. Amoxicillin" required>
+                </div>
+            </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="about.html" class="nav-item">About</a>
-        <a href="login.html" class="nav-item">Sign In</a>
-        <a href="dashboard.html" class="nav-item active">Dashboard</a>
-    </nav>
-      <footer class="footer">
-        <div class="footer-links">
-            <a href="#about">About Us</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact</a>
-        </div>
-        <p>&copy; 2026 MediRemind. A project by AMPATH.</p>
-    </footer>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="med-amount" value="1" class="input-box">
+                </div>
+                <div class="form-group">
+                    <label>Unit</label>
+                    <select id="med-unit" class="input-box">
+                        <option value="Tablet">Tablet</option>
+                        <option value="mg">mg</option>
+                        <option value="ml">ml</option>
+                    </select>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label>Frequency</label>
+                <select id="med-frequency" class="input-box" onchange="updateTimeInputs()">
+                    <option value="1">Once a day</option>
+                    <option value="2">Twice a day</option>
+                    <option value="3">3x a day</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Intake Times</label>
+                <div id="time-slots-container" class="time-grid">
+                    </div>
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="btn-save">Save Schedule</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="js/app-logic.js"></script>
 </body>
 </html>
