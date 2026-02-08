@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="user-info">
+            <h1>Hello, Dr. Mwangi 👩‍⚕️</h1>
+            <p id="current-date">Jan 29, 2026</p>
+        </div>
+        <div class="profile-icon">
+            <span>DM</span>
+        </div>
+    </header>
+
+    <!-- Adherence Overview -->
+    <section class="progress-section">
+        <div class="progress-card">
+            <div class="progress-circle" style="--percent: 75">
+                <span>75%</span>
+            </div>
+            <div class="progress-text">
+                <h3>Overall Adherence</h3>
+                <p>12 of 16 patients on track</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patient List -->
+    <main class="medication-container">
+        <h2>Patient Overview</h2>
+
+        <div id="patient-list">
+
+            <div class="med-card completed">
+                <div class="med-icon">👤</div>
+                <div class="med-details">
+                    <h3>Andrew Juma</h3>
+                    <p>100% adherence • All doses taken</p>
+                </div>
+                <div class="med-status">✔</div>
+            </div>
+
+            <div class="med-card pending">
+                <div class="med-icon">👤</div>
+                <div class="med-details">
+                    <h3>Sarah Otieno</h3>
+                    <p>50% adherence • 2 missed doses</p>
+                </div>
+                <button class="btn-take">Review</button>
+            </div>
+
+            <div class="med-card">
+                <div class="med-icon">👤</div>
+                <div class="med-details">
+                    <h3>James Kiptoo</h3>
+                    <p>25% adherence • High risk</p>
+                </div>
+                <button class="btn-take">Alert</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab-add">
+        +
+    </button>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="login.html" class="nav-item">Sign In</a>
+        <a href="doctor-dashboard.html" class="nav-item active">Doctor</a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="about.html">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+        </div>
+        <p>&copy; 2026 Dawa Reminder. A project by AMPATH.</p>
+    </footer>
+
+</body>
+</html>
