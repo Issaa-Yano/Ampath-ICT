@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nimeza Patient App</title>
+    <title>  App</title>
     <link rel="stylesheet" href="css/app-style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -12,6 +15,18 @@
 
 <div class="app-container">
     
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="switchView('dashboard')">
+            <i class="ph-fill ph-house"></i> <span>Home</span>
+        </a>
+        <a href="#">
+            <i class="ph ph-chart-bar"></i> <span>Reports</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchView('profile')">
+            <i class="ph ph-user"></i> <span>Profile</span>
+       </a>
+    </nav>
+
     <div id="view-dashboard">
         <header class="app-header">
             <div class="header-top">
@@ -19,7 +34,7 @@
                     <h1 id="greeting">Hello, Patient 👋</h1>
                     <p id="doses-remaining">Loading...</p>
                 </div>
-                <div class="profile-pic">AJ</div>
+                <div class="profile-pic" id="header-profile-pic">AJ</div>
             </div>
 
             <div class="progress-card">
@@ -41,19 +56,13 @@
                 <h2>Today's Schedule</h2>
                 <span id="current-date" class="date-badge">Today</span>
             </div>
-
+            <div id="med-filter-bar" style="display:flex; gap:10px; margin-bottom:20px;"></div>
             <div id="schedule-list"></div>
         </main>
 
         <button class="fab" onclick="switchView('add')">
             <i class="ph-bold ph-plus"></i>
         </button>
-        
-        <nav class="bottom-nav">
-            <a href="#" class="active"><i class="ph-fill ph-house"></i></a>
-            <a href="#"><i class="ph ph-chart-bar"></i></a>
-            <a href="#"><i class="ph ph-user"></i></a>
-        </nav>
     </div>
 
     <div id="view-add" class="hidden">
@@ -97,18 +106,127 @@
                 </select>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="med-start-date" class="input-box" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="med-end-date" class="input-box" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Intake Times</label>
                 <div id="time-slots-container" class="time-grid">
                     </div>
             </div>
 
-            <div class="form-footer">
-                <button type="submit" class="btn-save">Save Schedule</button>
+            <button type="submit" class="btn-save">Save Schedule</button>
+        </form>
+    </div>
+<div id="view-profile" class="hidden">
+    <div class="dashboard-wrapper">
+        
+        <div class="profile-header">
+            <div class="profile-avatar" id="profile-avatar">AJ</div>
+            <h2 id="profile-name">Alex Johnson</h2>
+            <p id="profile-patient-id">Patient ID: #883920</p>
+            <button class="btn-edit" id="edit-profile-btn" type="button">Edit Profile</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Age</span>
+                <span class="value" id="profile-age">34</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Weight</span>
+                <span class="value" id="profile-weight">72kg</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Blood</span>
+                <span class="value" id="profile-blood">O+</span>
+            </div>
+        </div>
+
+        <div class="menu-list">
+            <div class="menu-item menu-item-control" id="notifications-menu-item">
+                <div class="menu-icon"><i class="ph ph-bell"></i></div>
+                <div class="menu-text">
+                    <h4>Notifications</h4>
+                    <p id="notification-status-text">Checking...</p>
+                </div>
+                <button type="button" id="notification-toggle-btn" class="menu-toggle-btn">Enable</button>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-icon"><i class="ph ph-shield-check"></i></div>
+                <div class="menu-text">
+                    <h4>Privacy & Security</h4>
+                    <p>Password, 2FA</p>
+                </div>
+                <i class="ph ph-caret-right"></i>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-icon"><i class="ph ph-gear"></i></div>
+                <div class="menu-text">
+                    <h4>App Settings</h4>
+                    <p>Language, Theme</p>
+                </div>
+                <i class="ph ph-caret-right"></i>
+            </div>
+        </div>
+
+        <button class="btn-logout" onclick="window.location.href='index.html'">
+            <i class="ph ph-sign-out"></i> Log Out
+        </button>
+
+    </div>
+</div>
+
+</div>
+
+<div id="profile-modal" class="profile-modal hidden">
+    <div class="profile-modal-card">
+        <h3>Edit Profile</h3>
+        <form id="profile-form">
+            <div class="profile-form-grid">
+                <div class="form-group">
+                    <label for="profile-input-name">Full Name</label>
+                    <input type="text" id="profile-input-name" class="input-box" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile-input-age">Age</label>
+                    <input type="number" id="profile-input-age" class="input-box" min="0" max="130" placeholder="e.g. 34">
+                </div>
+                <div class="form-group">
+                    <label for="profile-input-weight">Weight</label>
+                    <input type="text" id="profile-input-weight" class="input-box" placeholder="e.g. 72 kg">
+                </div>
+                <div class="form-group">
+                    <label for="profile-input-blood">Blood Group</label>
+                    <select id="profile-input-blood" class="input-box">
+                        <option value="">Select blood group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+            </div>
+            <div class="profile-form-actions">
+                <button type="button" class="btn-cancel" id="cancel-profile-btn">Cancel</button>
+                <button type="submit" class="btn-save-inline">Save Profile</button>
             </div>
         </form>
     </div>
-
 </div>
 
 <script src="js/app-logic.js"></script>

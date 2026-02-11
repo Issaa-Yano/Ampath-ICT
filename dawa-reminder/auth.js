@@ -7,7 +7,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyDOOlaIJL1A5trkzQ-Lz_8vn4eNsN-XzG8",
     authDomain: "dawa-login-c01b3.firebaseapp.com",
     projectId: "dawa-login-c01b3",
-    storageBucket: "dawa-login-c01b3.firebasestorage.app",
+    storageBucket: "dawa-login-c01b3.appspot.com",
     messagingSenderId: "1012681172444",
     appId: "1:1012681172444:web:cf477ce6e592ab7c309b19"
 };

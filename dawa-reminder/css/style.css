@@ -326,10 +326,9 @@ input::placeholder {
 .password-wrapper i {
     position: absolute;
     right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 25%;;
     cursor: pointer;
-    color: #facc15;           /* bright accent, visible on gradient */
+    color: #ffffff;           /* keep icon clearly visible on input background */
     font-size: 1.2rem;
     transition: color 0.2s, transform 0.2s;
     z-index: 10;
@@ -338,7 +337,7 @@ input::placeholder {
 }
 
 .password-wrapper i:hover {
-    color: #0c0101;           /* white on hover for nice contrast */
+    color: #ffffff;
     transform: scale(1.1);    /* subtle pop effect */
 }
 
