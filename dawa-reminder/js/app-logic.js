@@ -166,6 +166,10 @@ const DataService = {
         this.paths.regimens = `users/${userId}/regimens`;
         this.paths.legacyMeds = `users/${userId}/medications`;
 
+        const localFirst = this.getLocalRegimens();
+        renderAll(localFirst);
+        NotificationSystem.onMedicationChanged();
+
         await this.bootstrapSync();
         this.attachRealtimeListener();
     },
@@ -1072,57 +1076,66 @@ function bindMedicationForm() {
 }
 
 function bindProfileForm() {
-    const editBtn = document.getElementById("edit-profile-btn");
-    const cancelBtn = document.getElementById("cancel-profile-btn");
-    const modal = document.getElementById("profile-modal");
-    const form = document.getElementById("profile-form");
-    if (!editBtn || !cancelBtn || !modal || !form) return;
+    // ================= REAL PROFILE MODAL LOGIC =================
+    const profileModal = document.getElementById("profile-modal");
+    const editProfileBtn = document.querySelector(".btn-edit");
+    const closeProfileBtn = document.getElementById("cancel-profile-btn");
+    const profileForm = document.getElementById("profile-edit-form") || document.getElementById("profile-form");
 
-    const inputName = document.getElementById("profile-input-name");
-    const inputAge = document.getElementById("profile-input-age");
-    const inputWeight = document.getElementById("profile-input-weight");
-    const inputBlood = document.getElementById("profile-input-blood");
+    if (!profileModal || !editProfileBtn || !closeProfileBtn || !profileForm) return;
 
-    const fillForm = () => {
-        const profile = ProfileService.getCurrent();
-        if (inputName) inputName.value = profile.fullName || "";
-        if (inputAge) inputAge.value = profile.age || "";
-        if (inputWeight) inputWeight.value = profile.weight || "";
-        if (inputBlood) inputBlood.value = profile.bloodGroup || "";
+    const ageInput = document.getElementById("profile-input-age");
+    const weightInput = document.getElementById("profile-input-weight");
+    const bloodInput = document.getElementById("profile-input-blood");
+    const nameInput = document.getElementById("profile-input-name");
+
+    const closeModal = () => {
+        profileModal.classList.add("hidden");
     };
 
-    const closeModal = () => modal.classList.add("hidden");
+    editProfileBtn.addEventListener("click", () => {
+        profileModal.classList.remove("hidden");
 
-    editBtn.addEventListener("click", () => {
-        fillForm();
-        modal.classList.remove("hidden");
+        const cachedProfile = JSON.parse(localStorage.getItem("cached_profile") || "{}");
+        const currentProfile = typeof ProfileService.getCurrent === "function" ? ProfileService.getCurrent() : {};
+        const currentData = { ...cachedProfile, ...currentProfile };
+
+        if (ageInput) ageInput.value = currentData.age || "";
+        if (weightInput) weightInput.value = currentData.weight || "";
+        if (bloodInput) bloodInput.value = currentData.blood || currentData.bloodGroup || "";
+        if (nameInput) nameInput.value = currentData.fullName || "";
     });
 
-    cancelBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", (event) => {
-        if (event.target === modal) closeModal();
+    closeProfileBtn.addEventListener("click", closeModal);
+    profileModal.addEventListener("click", (event) => {
+        if (event.target === profileModal) closeModal();
     });
 
-    form.addEventListener("submit", (event) => {
+    profileForm.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const fullName = String((inputName && inputName.value) || "").trim();
-        const ageRaw = String((inputAge && inputAge.value) || "").trim();
-        const weight = String((inputWeight && inputWeight.value) || "").trim();
-        const bloodGroup = String((inputBlood && inputBlood.value) || "").trim();
+        const newAge = ageInput ? ageInput.value : "";
+        const newWeight = weightInput ? weightInput.value : "";
+        const newBlood = bloodInput ? bloodInput.value : "";
+        const fullName = nameInput ? String(nameInput.value || "").trim() : undefined;
 
-        if (!fullName) return;
+        ProfileService.save({
+            ...(fullName ? { fullName } : {}),
+            age: newAge,
+            weight: newWeight,
+            blood: newBlood,
+            bloodGroup: newBlood
+        });
 
-        let age = "";
-        if (ageRaw !== "") {
-            const parsed = Number(ageRaw);
-            if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 130) {
-                age = String(Math.round(parsed));
-            }
-        }
+        localStorage.setItem("cached_profile", JSON.stringify({
+            ...(fullName ? { fullName } : {}),
+            age: newAge,
+            weight: newWeight,
+            blood: newBlood
+        }));
 
-        ProfileService.save({ fullName, age, weight, bloodGroup });
         closeModal();
+        alert("Profile Updated! ✅");
     });
 }
 
