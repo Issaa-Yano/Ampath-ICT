@@ -189,6 +189,20 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg-body); color: va
 .user-greeting h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); }
 .user-greeting p { font-size: 0.9rem; color: var(--text-gray); font-weight: 500; }
 .profile-pic { width: 45px; height: 45px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary); box-shadow: var(--shadow); border: 1px solid #e2e8f0; }
+.avatar-action {
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.avatar-action:hover {
+    transform: translateY(-1px);
+}
+
+.avatar-action:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+}
 
 /* Progress Card */
 .progress-card {
@@ -577,5 +591,246 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg-body); color: va
 
     .profile-form-actions button {
         flex: 1;
+    }
+}
+
+/* ================= DOCTOR DASHBOARD ================= */
+body.doctor-dashboard-page {
+    overflow-y: auto;
+}
+
+.doctor-shell {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 18px 40px;
+}
+
+.doctor-header {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    padding: 22px;
+}
+
+.doctor-main {
+    margin-top: 20px;
+}
+
+.doctor-recent-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.doctor-search-btn {
+    width: auto;
+    margin-top: 0;
+    padding: 14px 18px;
+    box-shadow: none;
+}
+
+.doctor-status-badge {
+    margin-top: 12px;
+    display: inline-block;
+}
+
+.doctor-patient-view {
+    margin-top: 24px;
+}
+
+.doctor-tab-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+
+.doctor-tab {
+    border: 1px solid #dbeafe;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.doctor-tab:hover {
+    background: #dbeafe;
+}
+
+.doctor-tab.active {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #ffffff;
+}
+
+.doctor-tab-panel {
+    animation: doctorFadeIn 0.2s ease;
+}
+
+@keyframes doctorFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.doctor-report-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+}
+
+.doctor-weekly-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.doctor-weekly-row {
+    display: grid;
+    grid-template-columns: 82px 1fr 96px;
+    align-items: center;
+    gap: 12px;
+}
+
+.doctor-weekly-date {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.doctor-weekly-track {
+    height: 12px;
+    width: 100%;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.doctor-weekly-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.doctor-weekly-bar.good {
+    background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+}
+
+.doctor-weekly-bar.mid {
+    background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+}
+
+.doctor-weekly-bar.low {
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+}
+
+.doctor-weekly-value {
+    text-align: right;
+    font-size: 0.78rem;
+    color: #475569;
+    font-weight: 700;
+}
+
+.doctor-monthly-summary-card {
+    background: #ffffff;
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    box-shadow: var(--shadow);
+}
+
+.doctor-history-list {
+    margin-top: 12px;
+}
+
+.doctor-history-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 10px 0;
+}
+
+.doctor-history-row:last-child {
+    border-bottom: none;
+}
+
+.doctor-history-date {
+    font-size: 0.84rem;
+    color: #334155;
+    font-weight: 700;
+}
+
+.doctor-history-value {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.doctor-profile-card {
+    width: min(460px, 100%);
+}
+
+.doctor-profile-header {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.doctor-profile-avatar {
+    margin: 0 auto 10px;
+}
+
+.doctor-profile-uid {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.doctor-logout-inline {
+    background: #ef4444;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.doctor-logout-inline:hover {
+    background: #dc2626;
+}
+
+@media (max-width: 767px) {
+    .doctor-shell {
+        padding: 16px 14px 30px;
+    }
+
+    .doctor-header {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .doctor-patient-view .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-weekly-row {
+        grid-template-columns: 68px 1fr 88px;
+        gap: 8px;
     }
 }

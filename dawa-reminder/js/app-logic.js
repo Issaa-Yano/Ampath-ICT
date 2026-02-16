@@ -154,7 +154,8 @@ const DataService = {
     },
     paths: {
         regimens: "",
-        legacyMeds: ""
+        legacyMeds: "",
+        history: ""
     },
     syncInProgress: false,
     regimensRef: null,
@@ -165,6 +166,7 @@ const DataService = {
         this.keys.meta = `nimeza_meta_${userId}`;
         this.paths.regimens = `users/${userId}/regimens`;
         this.paths.legacyMeds = `users/${userId}/medications`;
+        this.paths.history = `users/${userId}/history`;
 
         const localFirst = this.getLocalRegimens();
         renderAll(localFirst);
@@ -282,6 +284,43 @@ const DataService = {
         return this.normalizeRegimens(Array.from(map.values()));
     },
 
+    buildHistorySnapshot: function (regimens, dateKey) {
+        const targetDateKey = /^\d{4}-\d{2}-\d{2}$/.test(String(dateKey || "")) ? dateKey : getTodayKey();
+        const normalized = this.normalizeRegimens(regimens || []);
+        const medications = getOccurrencesForDate(normalized, targetDateKey).map((occurrence) => ({
+            regimenId: occurrence.regimenId,
+            name: occurrence.name,
+            amount: occurrence.amount,
+            unit: occurrence.unit,
+            time: occurrence.time,
+            taken: Boolean(occurrence.taken)
+        }));
+
+        const taken = medications.filter((item) => item.taken).length;
+        const total = medications.length;
+
+        return {
+            dateKey: targetDateKey,
+            taken,
+            total,
+            score: total ? Math.round((taken / total) * 100) : 0,
+            medications,
+            regimens: normalized,
+            updatedAt: Date.now()
+        };
+    },
+
+    writeHistorySnapshot: async function (regimens, dateKey) {
+        if (!this.uid || !navigator.onLine || !this.paths.history) return;
+
+        const snapshot = this.buildHistorySnapshot(regimens, dateKey);
+        try {
+            await db.ref(`${this.paths.history}/${snapshot.dateKey}`).set(snapshot);
+        } catch (error) {
+            // preserve local behavior if history write fails
+        }
+    },
+
     bootstrapSync: async function () {
         let localRegimens = this.getLocalRegimens();
         let cloudRegimens = [];
@@ -320,6 +359,7 @@ const DataService = {
         this.setLocalRegimens(merged);
         renderAll(merged);
         NotificationSystem.onMedicationChanged();
+        await this.writeHistorySnapshot(merged);
 
         if (navigator.onLine && merged.length && !cloudRegimens.length) {
             await this.pushToCloud(merged);
@@ -337,6 +377,7 @@ const DataService = {
             this.setLocalRegimens(merged);
             renderAll(merged);
             NotificationSystem.onMedicationChanged();
+            void this.writeHistorySnapshot(merged);
         });
     },
 
@@ -346,6 +387,7 @@ const DataService = {
         this.syncInProgress = true;
         try {
             await db.ref(this.paths.regimens).set(this.normalizeRegimens(regimens));
+            await this.writeHistorySnapshot(regimens);
             const meta = this.getLocalMeta();
             meta.lastSyncedAt = Date.now();
             meta.pendingSync = false;
@@ -373,6 +415,7 @@ const DataService = {
         meta.pendingSync = true;
         this.setLocalMeta(meta);
 
+        void this.writeHistorySnapshot(normalized);
         this.pushToCloud(normalized);
     }
 };
@@ -514,6 +557,9 @@ const NotificationSystem = {
     history: {},
     ticker: null,
     uiBound: false,
+    soundUrl: "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3",
+    audioUnlocked: false,
+    lastAudioAt: 0,
 
     start: function () {
         if (this.ticker) clearInterval(this.ticker);
@@ -587,6 +633,28 @@ const NotificationSystem = {
         });
 
         this.saveHistory();
+    },
+
+    playReminderSound: function () {
+        const nowMs = Date.now();
+        if (nowMs - this.lastAudioAt < 1200) return;
+        this.lastAudioAt = nowMs;
+
+        const audio = new Audio(this.soundUrl);
+        audio.play()
+            .then(() => {
+                this.audioUnlocked = true;
+            })
+            .catch(() => {
+                // Browser blocks autoplay until user interaction.
+            });
+    },
+
+    playTestSound: function () {
+        const audio = new Audio(this.soundUrl);
+        return audio.play().then(() => {
+            this.audioUnlocked = true;
+        });
     },
 
     bindUI: function () {
@@ -684,9 +752,11 @@ const NotificationSystem = {
             const diffMinutes = nowMinutes - timeToMinutes(occurrence.time);
 
             if (diffMinutes >= 0 && diffMinutes <= 1 && !this.hasSent(occurrence.key, "due")) {
+                this.playReminderSound();
                 this.alertUser(occurrence, "due");
                 this.markSent(occurrence.key, "due");
             } else if (diffMinutes >= 20 && diffMinutes <= 180 && !this.hasSent(occurrence.key, "missed")) {
+                this.playReminderSound();
                 this.alertUser(occurrence, "missed");
                 this.markSent(occurrence.key, "missed");
             }
@@ -767,6 +837,7 @@ function parseOccurrenceKey(key) {
 
 // ================= 8. UI RENDERING =================
 let currentFilter = "today";
+let editingRegimenId = null;
 
 function getFilteredOccurrences(regimens, filterType) {
     const now = new Date();
@@ -808,8 +879,8 @@ function renderSchedule(regimens) {
                 </div>
             </div>
             <div class="card-actions">
-                <button class="btn-delete" onclick="deleteMedication('${occurrence.regimenId}')" aria-label="Delete regimen">
-                    <i class="ph ph-trash"></i>
+                <button class="btn-edit" onclick="editMedication('${occurrence.regimenId}')" aria-label="Edit regimen">
+                    Edit
                 </button>
                 <button class="btn-action" onclick="toggleTaken('${occurrence.key}')">
                     ${occurrence.taken ? '<i class="ph-bold ph-check"></i>' : "Take"}
@@ -923,6 +994,61 @@ window.deleteMedication = function (regimenId) {
     UndoManager.show("Medication regimen deleted.");
 };
 
+function setMedicationFormModeLabel() {
+    const submitBtn = document.querySelector("#add-med-form button[type='submit']");
+    if (!submitBtn) return;
+    submitBtn.textContent = editingRegimenId ? "Update Schedule" : "Save Schedule";
+}
+
+function resetMedicationFormMode(clearFields) {
+    editingRegimenId = null;
+    setMedicationFormModeLabel();
+
+    const form = document.getElementById("add-med-form");
+    if (clearFields && form) {
+        form.reset();
+    }
+}
+
+window.editMedication = function (regimenId) {
+    const regimens = DataService.getLocalRegimens();
+    const regimen = regimens.find((item) => item.id === regimenId);
+    if (!regimen) {
+        showInAppBanner("Medication not found.", "warning");
+        return;
+    }
+
+    const nameInput = document.getElementById("med-name");
+    const amountInput = document.getElementById("med-amount");
+    const unitInput = document.getElementById("med-unit");
+    const freqInput = document.getElementById("med-frequency");
+    const startInput = document.getElementById("med-start-date");
+    const endInput = document.getElementById("med-end-date");
+
+    if (!nameInput || !amountInput || !unitInput || !freqInput || !startInput || !endInput) {
+        showInAppBanner("Edit form is unavailable.", "warning");
+        return;
+    }
+
+    editingRegimenId = regimen.id;
+    setMedicationFormModeLabel();
+    window.switchView("add", true);
+
+    nameInput.value = regimen.name || "";
+    amountInput.value = regimen.amount || "1";
+    unitInput.value = regimen.unit || "Tablet";
+    freqInput.value = String((Array.isArray(regimen.times) && regimen.times.length) ? regimen.times.length : (Number(regimen.frequency) || 1));
+    startInput.value = regimen.startDate || getTodayKey();
+    endInput.value = regimen.endDate || addDays(startInput.value, 30);
+
+    window.updateTimeInputs();
+    const slots = document.querySelectorAll(".time-slot");
+    const times = Array.isArray(regimen.times) ? regimen.times : [];
+    slots.forEach((slot, index) => {
+        if (times[index]) slot.value = times[index];
+    });
+};
+
 window.updateTimeInputs = function () {
     const freq = Number(document.getElementById("med-frequency").value || 1);
     const container = document.getElementById("time-slots-container");
@@ -940,7 +1066,7 @@ window.updateTimeInputs = function () {
     }
 };
 
-window.switchView = function (viewName) {
+window.switchView = function (viewName, preserveMedicationFormState) {
     const views = {
         dashboard: document.getElementById("view-dashboard"),
         add: document.getElementById("view-add"),
@@ -954,6 +1080,12 @@ window.switchView = function (viewName) {
     navItems.forEach((item) => item.classList.remove("active"));
     if (viewName === "dashboard" && navItems[0]) navItems[0].classList.add("active");
     if (viewName === "profile" && navItems[1]) navItems[1].classList.add("active");
+
+    if (viewName === "add" && !preserveMedicationFormState) {
+        resetMedicationFormMode(true);
+        window.updateTimeInputs();
+        setDefaultRegimenDates();
+    }
 };
 
 window.filterMeds = function (type) {
@@ -1048,27 +1180,66 @@ function bindMedicationForm() {
             return;
         }
 
-        const regimen = {
-            id: makeId("regimen"),
-            name,
-            amount,
-            unit,
-            frequency: Number(frequency) || times.length,
-            times,
-            startDate,
-            endDate,
-            status: "active",
-            doseLog: {},
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-        };
-
         UndoManager.capture();
         const regimens = DataService.getLocalRegimens();
-        DataService.save([...regimens, regimen]);
-        UndoManager.show("Medication regimen saved.");
+
+        if (editingRegimenId) {
+            const existingIndex = regimens.findIndex((item) => item.id === editingRegimenId);
+            if (existingIndex >= 0) {
+                const existing = regimens[existingIndex];
+                regimens[existingIndex] = {
+                    ...existing,
+                    name,
+                    amount,
+                    unit,
+                    frequency: Number(frequency) || times.length,
+                    times,
+                    startDate,
+                    endDate,
+                    status: "active",
+                    updatedAt: Date.now()
+                };
+                DataService.save(regimens);
+                UndoManager.show("Medication regimen updated.");
+            } else {
+                const regimen = {
+                    id: makeId("regimen"),
+                    name,
+                    amount,
+                    unit,
+                    frequency: Number(frequency) || times.length,
+                    times,
+                    startDate,
+                    endDate,
+                    status: "active",
+                    doseLog: {},
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                DataService.save([...regimens, regimen]);
+                UndoManager.show("Medication regimen saved.");
+            }
+        } else {
+            const regimen = {
+                id: makeId("regimen"),
+                name,
+                amount,
+                unit,
+                frequency: Number(frequency) || times.length,
+                times,
+                startDate,
+                endDate,
+                status: "active",
+                doseLog: {},
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            DataService.save([...regimens, regimen]);
+            UndoManager.show("Medication regimen saved.");
+        }
 
         form.reset();
+        resetMedicationFormMode(false);
         window.updateTimeInputs();
         setDefaultRegimenDates();
         window.switchView("dashboard");
@@ -1078,11 +1249,12 @@ function bindMedicationForm() {
 function bindProfileForm() {
     // ================= REAL PROFILE MODAL LOGIC =================
     const profileModal = document.getElementById("profile-modal");
-    const editProfileBtn = document.querySelector(".btn-edit");
+    const editProfileBtn = document.getElementById("edit-profile-btn");
+    const profileAvatarBtn = document.getElementById("profile-avatar");
     const closeProfileBtn = document.getElementById("cancel-profile-btn");
     const profileForm = document.getElementById("profile-edit-form") || document.getElementById("profile-form");
 
-    if (!profileModal || !editProfileBtn || !closeProfileBtn || !profileForm) return;
+    if (!profileModal || !closeProfileBtn || !profileForm) return;
 
     const ageInput = document.getElementById("profile-input-age");
     const weightInput = document.getElementById("profile-input-weight");
@@ -1093,7 +1265,7 @@ function bindProfileForm() {
         profileModal.classList.add("hidden");
     };
 
-    editProfileBtn.addEventListener("click", () => {
+    const openModal = () => {
         profileModal.classList.remove("hidden");
 
         const cachedProfile = JSON.parse(localStorage.getItem("cached_profile") || "{}");
@@ -1104,7 +1276,15 @@ function bindProfileForm() {
         if (weightInput) weightInput.value = currentData.weight || "";
         if (bloodInput) bloodInput.value = currentData.blood || currentData.bloodGroup || "";
         if (nameInput) nameInput.value = currentData.fullName || "";
-    });
+    };
+
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener("click", openModal);
+    }
+
+    if (profileAvatarBtn) {
+        profileAvatarBtn.addEventListener("click", openModal);
+    }
 
     closeProfileBtn.addEventListener("click", closeModal);
     profileModal.addEventListener("click", (event) => {
@@ -1156,7 +1336,64 @@ function bindSyncEvents() {
     });
 }
 
-// ================= 10. BOOTSTRAP =================
+// ================= 10. APP SETTINGS & SHARING =================
+function playTestNotificationSound() {
+    if (!NotificationSystem || typeof NotificationSystem.playTestSound !== "function") {
+        showInAppBanner("Sound system unavailable.", "warning");
+        return;
+    }
+
+    NotificationSystem.playTestSound()
+        .then(() => showInAppBanner("Notification sound is enabled.", "info"))
+        .catch(() => showInAppBanner("Tap Test Sound again to allow browser audio.", "warning"));
+}
+
+function setSharingPatientId(uid) {
+    const idInput = document.getElementById("my-patient-id");
+    if (idInput) idInput.value = String(uid || "");
+}
+
+async function copySharingPatientId() {
+    const idInput = document.getElementById("my-patient-id");
+    const raw = idInput ? String(idInput.value || "").trim() : "";
+    if (!raw) {
+        showInAppBanner("Patient ID is empty.", "warning");
+        return;
+    }
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(raw);
+        } else if (idInput) {
+            idInput.focus();
+            idInput.select();
+            document.execCommand("copy");
+            idInput.setSelectionRange(0, 0);
+            idInput.blur();
+        } else {
+            throw new Error("No input available");
+        }
+        showInAppBanner("Patient ID copied.", "info");
+    } catch (error) {
+        showInAppBanner("Unable to copy. Please copy manually.", "warning");
+    }
+}
+
+function bindAppSettingsAndSharing() {
+    const testSoundBtn = document.getElementById("test-sound-btn");
+    const copyIdBtn = document.getElementById("copy-patient-id-btn");
+
+    if (testSoundBtn) {
+        testSoundBtn.addEventListener("click", playTestNotificationSound);
+    }
+    if (copyIdBtn) {
+        copyIdBtn.addEventListener("click", () => {
+            copySharingPatientId();
+        });
+    }
+}
+
+// ================= 11. BOOTSTRAP =================
 document.addEventListener("DOMContentLoaded", () => {
     window.updateTimeInputs();
     setDefaultRegimenDates();
@@ -1164,6 +1401,7 @@ document.addEventListener("DOMContentLoaded", () => {
     installFilterButtons();
     bindMedicationForm();
     bindProfileForm();
+    bindAppSettingsAndSharing();
     setDateLabel();
     NotificationSystem.start();
     bindSyncEvents();
@@ -1173,5 +1411,6 @@ document.addEventListener("DOMContentLoaded", () => {
         DataService.init(uid);
         ProfileService.init(user || null);
         NotificationSystem.setUser(uid);
+        setSharingPatientId(uid);
     });
 });

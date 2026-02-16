@@ -34,7 +34,14 @@
                     <h1 id="greeting">Hello, Patient 👋</h1>
                     <p id="doses-remaining">Loading...</p>
                 </div>
-                <div class="profile-pic" id="header-profile-pic">AJ</div>
+                <button
+                    type="button"
+                    class="profile-pic avatar-action"
+                    id="header-profile-pic"
+                    aria-label="Open profile"
+                    title="Open profile"
+                    onclick="switchView('profile')"
+                >AJ</button>
             </div>
 
             <div class="progress-card">
@@ -130,7 +137,13 @@
     <div class="dashboard-wrapper">
         
         <div class="profile-header">
-            <div class="profile-avatar" id="profile-avatar">AJ</div>
+            <button
+                type="button"
+                class="profile-avatar avatar-action"
+                id="profile-avatar"
+                aria-label="Edit profile"
+                title="Edit profile"
+            >AJ</button>
             <h2 id="profile-name">Alex Johnson</h2>
             <p id="profile-patient-id">Patient ID: #883920</p>
             <button class="btn-edit" id="edit-profile-btn" type="button">Edit Profile</button>
@@ -177,6 +190,32 @@
                     <p>Language, Theme</p>
                 </div>
                 <i class="ph ph-caret-right"></i>
+            </div>
+        </div>
+
+        <div class="menu-list" id="sharing-settings-panel">
+            <div class="menu-item" style="cursor:default;">
+                <div class="menu-icon"><i class="ph ph-share-network"></i></div>
+                <div class="menu-text">
+                    <h4>App Settings & Sharing</h4>
+                    <p>Unlock sound and share your patient ID with your doctor.</p>
+                </div>
+            </div>
+            <div class="menu-item menu-item-control" style="cursor:default;">
+                <div class="menu-icon"><i class="ph ph-speaker-high"></i></div>
+                <div class="menu-text">
+                    <h4>Notification Sound</h4>
+                    <p>Play a test sound to enable browser audio prompts.</p>
+                </div>
+                <button type="button" id="test-sound-btn" class="menu-toggle-btn">Test Sound</button>
+            </div>
+            <div class="menu-item menu-item-control" style="cursor:default; align-items:flex-start;">
+                <div class="menu-icon"><i class="ph ph-identification-card"></i></div>
+                <div class="menu-text">
+                    <h4>My Patient ID</h4>
+                    <input type="text" id="my-patient-id" class="input-box" value="" readonly style="margin-top:8px;">
+                </div>
+                <button type="button" id="copy-patient-id-btn" class="menu-toggle-btn">Copy</button>
             </div>
         </div>
 

@@ -3,94 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Doctor Portal</title>
+    <link rel="stylesheet" href="css/app-style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-
-    <!-- Header -->
-    <header class="dashboard-header">
-        <div class="user-info">
-            <h1>Hello, Dr. Mwangi 👩‍⚕️</h1>
-            <p id="current-date">Jan 29, 2026</p>
-        </div>
-        <div class="profile-icon">
-            <span>DM</span>
+<body class="doctor-dashboard-page">
+<div class="doctor-shell">
+    <header class="app-header doctor-header">
+        <div class="header-top">
+            <div class="user-greeting">
+                <h1>Doctor Portal</h1>
+                <p>Search, review, and monitor patient adherence.</p>
+            </div>
+            <button
+                type="button"
+                class="profile-pic avatar-action"
+                id="doctor-profile-avatar"
+                aria-label="Open doctor profile"
+                title="Open doctor profile"
+            >DR</button>
         </div>
     </header>
 
-    <!-- Adherence Overview -->
-    <section class="progress-section">
-        <div class="progress-card">
-            <div class="progress-circle" style="--percent: 75">
-                <span>75%</span>
-            </div>
-            <div class="progress-text">
-                <h3>Overall Adherence</h3>
-                <p>12 of 16 patients on track</p>
-            </div>
+    <main class="schedule-container doctor-main">
+        <div class="section-head">
+            <h2>Recent Patients</h2>
         </div>
-    </section>
+        <div id="recent-patients" class="doctor-recent-list"></div>
 
-    <!-- Patient List -->
-    <main class="medication-container">
-        <h2>Patient Overview</h2>
-
-        <div id="patient-list">
-
-            <div class="med-card completed">
-                <div class="med-icon">👤</div>
-                <div class="med-details">
-                    <h3>Andrew Juma</h3>
-                    <p>100% adherence • All doses taken</p>
+        <section id="doctor-search-area">
+            <div class="section-head">
+                <h2>Find Patient</h2>
+            </div>
+            <form id="doctor-search-form">
+                <div class="form-row" style="align-items:flex-end;">
+                    <div class="form-group" style="flex:1; margin-bottom:0;">
+                        <label for="patient-id-input">Enter Patient UID or Patient ID</label>
+                        <input type="text" id="patient-id-input" class="input-box" placeholder="Firebase UID or #ABC123">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <button type="submit" id="search-patient-btn" class="btn-save doctor-search-btn">Search</button>
+                    </div>
                 </div>
-                <div class="med-status">✔</div>
+            </form>
+            <p id="doctor-search-status" class="date-badge doctor-status-badge">Enter a Patient ID to begin.</p>
+        </section>
+
+        <section id="doctor-patient-view" class="hidden doctor-patient-view">
+            <div class="section-head">
+                <h2 id="doctor-patient-name">Patient Summary</h2>
+                <span id="doctor-patient-id" class="date-badge"></span>
             </div>
 
-            <div class="med-card pending">
-                <div class="med-icon">👤</div>
-                <div class="med-details">
-                    <h3>Sarah Otieno</h3>
-                    <p>50% adherence • 2 missed doses</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="label">Age</span>
+                    <span class="value" id="doctor-age">--</span>
                 </div>
-                <button class="btn-take">Review</button>
+                <div class="stat-card">
+                    <span class="label">Blood Type</span>
+                    <span class="value" id="doctor-blood">--</span>
+                </div>
+                <div class="stat-card">
+                    <span class="label">Total Doses</span>
+                    <span class="value" id="doctor-total-doses">0</span>
+                </div>
             </div>
 
-            <div class="med-card">
-                <div class="med-icon">👤</div>
-                <div class="med-details">
-                    <h3>James Kiptoo</h3>
-                    <p>25% adherence • High risk</p>
-                </div>
-                <button class="btn-take">Alert</button>
+            <div class="doctor-tab-bar" role="tablist" aria-label="Doctor Dashboard Tabs">
+                <button
+                    type="button"
+                    class="doctor-tab active"
+                    data-tab="live"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="doctor-live-panel"
+                >
+                    Live View
+                </button>
+                <button
+                    type="button"
+                    class="doctor-tab"
+                    data-tab="weekly"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="doctor-weekly-panel"
+                >
+                    Weekly Report
+                </button>
+                <button
+                    type="button"
+                    class="doctor-tab"
+                    data-tab="monthly"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="doctor-monthly-panel"
+                >
+                    Monthly History
+                </button>
             </div>
 
-        </div>
+            <section id="doctor-live-panel" class="doctor-tab-panel" role="tabpanel">
+                <div class="progress-card">
+                    <div class="progress-info">
+                        <h3>Adherence</h3>
+                        <p id="doctor-progress-percent">0%</p>
+                    </div>
+                    <div class="ring-wrapper">
+                        <svg width="80" height="80">
+                            <circle cx="40" cy="40" r="30" class="ring-bg"></circle>
+                            <circle cx="40" cy="40" r="30" class="ring-progress" id="doctor-progress-ring"></circle>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="section-head" style="margin-top:24px;">
+                    <h2>Today's Pills</h2>
+                    <button type="button" id="doctor-search-again-btn" class="btn-edit">Search Another</button>
+                </div>
+                <div id="doctor-med-list"></div>
+            </section>
+
+            <section id="doctor-weekly-panel" class="doctor-tab-panel hidden" role="tabpanel">
+                <div class="section-head" style="margin-top:8px;">
+                    <h2>Last 7 Days</h2>
+                </div>
+                <div id="doctor-weekly-report" class="doctor-report-card"></div>
+            </section>
+
+            <section id="doctor-monthly-panel" class="doctor-tab-panel hidden" role="tabpanel">
+                <div id="doctor-monthly-summary" class="doctor-monthly-summary-card">
+                    Monthly Average: 0%
+                </div>
+                <div id="doctor-monthly-history" class="doctor-report-card doctor-history-list"></div>
+            </section>
+        </section>
     </main>
+</div>
 
-    <!-- Floating Action Button -->
-    <button class="fab-add">
-        +
-    </button>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="about.html" class="nav-item">About</a>
-        <a href="login.html" class="nav-item">Sign In</a>
-        <a href="doctor-dashboard.html" class="nav-item active">Doctor</a>
-    </nav>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-links">
-            <a href="about.html">About Us</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact</a>
+<div id="doctor-profile-modal" class="profile-modal hidden">
+    <div class="profile-modal-card doctor-profile-card">
+        <div class="profile-header doctor-profile-header">
+            <div class="profile-avatar doctor-profile-avatar" id="doctor-profile-avatar-large">DR</div>
+            <h2 id="doctor-profile-name">Doctor</h2>
+            <p id="doctor-profile-email">--</p>
+            <p id="doctor-profile-uid" class="doctor-profile-uid">UID: --</p>
         </div>
-        <p>&copy; 2026 Dawa Reminder. A project by AMPATH.</p>
-    </footer>
+        <div class="profile-form-actions">
+            <button type="button" class="btn-cancel" id="doctor-profile-close-btn">Close</button>
+            <button type="button" class="btn-save-inline doctor-logout-inline" id="doctor-logout-btn">
+                <i class="ph ph-sign-out"></i> Log Out
+            </button>
+        </div>
+    </div>
+</div>
 
+<script src="js/doctor-logic.js"></script>
 </body>
 </html>
