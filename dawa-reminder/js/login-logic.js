@@ -59,18 +59,16 @@ function setMode(mode) {
     activeMode = mode === "doctor" ? "doctor" : "patient";
     const isDoctor = getIsDoctorMode();
 
-    if (doctorFields) doctorFields.classList.toggle("hidden-field", !isDoctor);
+    if (doctorFields) doctorFields.classList.toggle("hidden", !isDoctor);
     updateSubmitLabel();
 
     if (licenseInput) licenseInput.required = isDoctor;
     if (nationalIdInput) nationalIdInput.required = isDoctor;
 
     if (patientBtn) {
-        patientBtn.classList.toggle("active", !isDoctor);
         patientBtn.setAttribute("aria-pressed", String(!isDoctor));
     }
     if (doctorBtn) {
-        doctorBtn.classList.toggle("active", isDoctor);
         doctorBtn.setAttribute("aria-pressed", String(isDoctor));
     }
 

@@ -1,92 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unified Login | Dawa Reminder</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        .auth-shell {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px 12px;
-        }
-        .role-toggle {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-        .role-btn {
-            padding: 10px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        .role-btn.active {
-            background: linear-gradient(90deg, #22c55e, #16a34a);
-            border-color: transparent;
-        }
-        .hidden-field {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-<main class="auth-shell">
-    <div class="auth-container">
-        <h2 id="auth-title">Unified Login Portal</h2>
-        <p class="toggle-text" style="margin-top:6px; margin-bottom:14px;">Select your mode and continue.</p>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoseWise | Unified Login</title>
 
-        <div class="role-toggle" role="tablist" aria-label="Role selection">
-            <button type="button" id="patient-mode-btn" class="role-btn active" aria-pressed="true">Patient Mode</button>
-            <button type="button" id="doctor-mode-btn" class="role-btn" aria-pressed="false">Doctor Mode</button>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="./src/output.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body class="bg-[var(--color-mydocto-bg)] text-slate-700 font-['Poppins'] antialiased">
+  <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <a href="index.html" class="inline-flex">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-mydocto-teal)] text-white text-sm font-bold shadow-md">DW</span>
+            <span class="text-2xl tracking-tight">
+              <span class="font-extrabold text-[var(--color-mydocto-teal)]">Dose</span><span class="font-medium text-[#10b981]">Wise</span>
+            </span>
+          </div>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Home</a>
+          <a href="index.html#features" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Features</a>
+          <a href="about.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">About</a>
+          <a href="contact us.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Contact</a>
+        </div>
+        <a href="login.html" class="hidden md:inline-flex bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Login / Portal</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="min-h-[calc(100vh-80px)] flex items-center py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div class="bg-white/70 rounded-3xl p-8 border border-white/60 shadow-[0px_20px_40px_rgba(15,23,42,0.12)]">
+          <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Welcome back</p>
+          <h1 class="mt-4 text-3xl sm:text-4xl font-semibold text-[var(--color-mydocto-teal)]">Unified Login Portal</h1>
+          <p class="mt-4 text-slate-500">
+            Choose your role and sign in to manage medication reminders, patient schedules, and care insights.
+          </p>
+          <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)]">
+              <p class="text-sm text-slate-500">Patient access</p>
+              <p class="mt-1 font-semibold text-slate-900">Daily reminders</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)]">
+              <p class="text-sm text-slate-500">Doctor access</p>
+              <p class="mt-1 font-semibold text-slate-900">Care dashboards</p>
+            </div>
+          </div>
         </div>
 
-        <form id="unified-login-form">
-            <div class="input-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="Enter email" required>
+        <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0px_20px_40px_rgba(15,23,42,0.12)]">
+          <h2 id="auth-title" class="text-2xl font-semibold text-[var(--color-mydocto-teal)]">Unified Login Portal</h2>
+          <p class="mt-2 text-slate-500">Select your mode and continue.</p>
+
+          <div class="mt-6 grid grid-cols-2 gap-3" role="tablist" aria-label="Role selection">
+            <button type="button" id="patient-mode-btn" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md aria-pressed:bg-[var(--color-mydocto-teal)] aria-pressed:text-white aria-pressed:border-transparent aria-pressed:shadow-[0px_10px_30px_rgba(29,53,87,0.3)]" aria-pressed="true">Patient Mode</button>
+            <button type="button" id="doctor-mode-btn" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md aria-pressed:bg-[var(--color-mydocto-teal)] aria-pressed:text-white aria-pressed:border-transparent aria-pressed:shadow-[0px_10px_30px_rgba(29,53,87,0.3)]" aria-pressed="false">Doctor Mode</button>
+          </div>
+
+          <form id="unified-login-form" class="mt-6 space-y-5">
+            <div>
+              <label for="login-email" class="text-sm font-semibold text-slate-600">Email</label>
+              <input type="email" id="login-email" placeholder="Enter email" required class="mt-2 w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue)] focus:bg-white transition-all duration-200">
             </div>
 
-            <div class="input-group">
-                <label for="login-password">Password</label>
-                <div class="password-wrapper">
-                    <input type="password" id="login-password" placeholder="Enter password" required>
-                    <i class="fa-solid fa-eye" id="eye-login"></i>
-                </div>
+            <div>
+              <label for="login-password" class="text-sm font-semibold text-slate-600">Password</label>
+              <div class="relative mt-2">
+                <input type="password" id="login-password" placeholder="Enter password" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue)] focus:bg-white transition-all duration-200">
+                <i class="fa-solid fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" id="eye-login" aria-hidden="true"></i>
+              </div>
             </div>
 
-            <div id="doctor-extra-fields" class="hidden-field">
-                <div class="input-group">
-                    <label for="doctor-license-id">Medical License ID</label>
-                    <input type="text" id="doctor-license-id" placeholder="Enter license ID">
-                </div>
-                <div class="input-group">
-                    <label for="doctor-national-id">National ID</label>
-                    <input type="text" id="doctor-national-id" placeholder="Enter national ID">
-                </div>
+            <div id="doctor-extra-fields" class="hidden space-y-5">
+              <div>
+                <label for="doctor-license-id" class="text-sm font-semibold text-slate-600">Medical License ID</label>
+                <input type="text" id="doctor-license-id" placeholder="Enter license ID" class="mt-2 w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue)] focus:bg-white transition-all duration-200">
+              </div>
+              <div>
+                <label for="doctor-national-id" class="text-sm font-semibold text-slate-600">National ID</label>
+                <input type="text" id="doctor-national-id" placeholder="Enter national ID" class="mt-2 w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue)] focus:bg-white transition-all duration-200">
+              </div>
             </div>
 
-            <button type="submit" id="login-submit-btn">Login to Dashboard</button>
-        </form>
+            <button type="submit" id="login-submit-btn" class="w-full bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Login to Dashboard</button>
+          </form>
 
-        <p id="error-message" class="error-msg"></p>
-        <p class="toggle-text" id="auth-toggle-wrap">
+          <p id="error-message" class="mt-4 text-sm text-rose-600 min-h-[1.25rem]"></p>
+          <p class="mt-4 text-sm text-slate-500" id="auth-toggle-wrap">
             <span id="auth-toggle-text">New here?</span>
-            <a href="javascript:void(0)" class="toggle-link" id="auth-toggle-link">Create Account</a>
-        </p>
-        <p class="toggle-text"><a href="index.html" class="toggle-link">Back to Home</a></p>
+            <a href="javascript:void(0)" class="ml-2 font-semibold text-[var(--color-mydocto-teal)] hover:underline" id="auth-toggle-link">Create Account</a>
+          </p>
+          <p class="mt-2 text-sm"><a href="index.html" class="font-semibold text-slate-500 hover:text-[var(--color-mydocto-teal)] transition-colors">Back to Home</a></p>
+        </div>
+      </div>
     </div>
-</main>
+  </main>
 
-<script type="module" src="js/login-logic.js"></script>
+  <footer class="bg-[#1D3557] text-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <h3 class="text-lg font-semibold">DoseWise</h3>
+          <p class="mt-3 text-sm text-slate-300">A premium adherence platform built for AMPATH programs and the communities they serve.</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Address</h4>
+          <p class="mt-3 text-sm text-slate-300">AMPATH Centre, Eldoret, Kenya</p>
+          <p class="mt-1 text-sm text-slate-300">dawareminder@healthapp.test</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Links</h4>
+          <div class="mt-3 flex flex-col gap-2 text-sm">
+            <a href="index.html" class="hover:text-white transition-colors">Home</a>
+            <a href="about.html" class="hover:text-white transition-colors">About</a>
+            <a href="contact us.html" class="hover:text-white transition-colors">Contact</a>
+            <a href="login.html" class="hover:text-white transition-colors">Login / Portal</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300 border-t border-white/10 pt-6">
+        <p>&copy; 2026 DoseWise. A project by AMPATH.</p>
+        <p>Built for better healthcare outcomes.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/login-logic.js"></script>
 </body>
 </html>

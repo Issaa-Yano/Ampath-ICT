@@ -1,100 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MediRemind - Never Miss a Dose</title>
+  <title>DoseWise | Never Miss a Dose</title>
 
-  <!-- Global CSS -->
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="./src/output.css" rel="stylesheet">
 </head>
 
-<body>
-
-  <!-- ===== BACKGROUND SLIDESHOW ===== -->
-  <div class="background-slideshow">
-      <div class="slide"><img src="asserts/background.jpg.jpeg" alt="Background 1"></div>
-      <div class="slide"><img src="asserts/ckground.jpeg" alt="Background 2"></div>
-      <div class="slide"><img src="asserts/ground.jpg.jpeg" alt="Background 3"></div>
-  </div>
-
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar">
-      <div class="nav-logo">💊 Dawa Reminder</div>
-      <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="dashboard.html">Dashboard</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="login.html" class="btn btn-primary">Sign In</a></li>
-      </ul>
-  </nav>
-
-  <!-- ===== HERO SECTION ===== -->
-  <section class="hero">
-    <div class="hero-content container">
-      <h1 class="animate-gradient-x">Never Miss a Dose Again</h1>
-      <p>
-        Smart medication reminders powered by care.
-        Built for AMPATH patients and healthcare providers
-        to ensure every dose counts.
-      </p>
-      <a href="login.html" class="btn btn-primary" style="margin-top: 1.5rem;">Get Started Free</a>
-    </div>
-  </section>
-
-  <!-- ===== HOW IT WORKS ===== -->
-  <section class="section">
-    <div class="container">
-      <h2 class="section-title animate-gradient">How It Works</h2>
-      <p class="section-text">Three simple steps to better medication adherence</p>
-
-      <div class="features-grid">
-        <!-- Step 1 -->
-        <div class="feature-card animate-gradient-x">
-          <h3>🎯 Create Your Profile</h3>
-          <p>Sign up in seconds and add your medications, dosage times, and instructions.</p>
+<body class="bg-[var(--color-mydocto-bg)] text-slate-700 font-['Poppins'] antialiased">
+  <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <a href="index.html" class="inline-flex">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-mydocto-teal)] text-white text-sm font-bold shadow-md">DW</span>
+            <span class="text-2xl tracking-tight">
+              <span class="font-extrabold text-[var(--color-mydocto-teal)]">Dose</span><span class="font-medium text-[#10b981]">Wise</span>
+            </span>
+          </div>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="font-semibold text-[var(--color-mydocto-teal)]">Home</a>
+          <a href="features.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Features</a>
+          <a href="about.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">About</a>
+          <a href="contact us.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Contact</a>
         </div>
-
-        <!-- Step 2 -->
-        <div class="feature-card animate-gradient-x">
-          <h3>⏰ Get Smart Reminders</h3>
-          <p>Receive timely reminders via SMS, email, or app notifications.</p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="feature-card animate-gradient-x">
-          <h3>📊 Track Your Progress</h3>
-          <p>Monitor adherence and share reports with your healthcare provider.</p>
-        </div>
+        <a href="login.html" class="hidden md:inline-flex bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Login / Portal</a>
       </div>
     </div>
-  </section>
+  </nav>
 
-  <!-- ===== CALL TO ACTION ===== -->
-  <section class="section">
-    <div class="container" style="text-align: center;">
-      <h2 class="section-title animate-gradient">Ready to Take Control of Your Health?</h2>
-      <p class="section-text">Join thousands of patients using MediRemind to stay on track with their medication schedules.</p>
-      <a href="login.html" class="btn btn-primary">Start Free Today</a>
-      <a href="about.html" class="btn btn-secondary">Learn More</a>
-    </div>
-  </section>
+  <main>
+    <section class="relative overflow-hidden bg-slate-900 text-white">
+      <div class="absolute inset-0">
+        <img src="asserts/background.jpg.jpeg" alt="DoseWise hero background" class="h-full w-full object-cover opacity-40" />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#1D3557]/95 to-[#1D3557]/70"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p class="text-sm uppercase tracking-[0.35em] text-slate-300">DoseWise adherence platform</p>
+            <h1 class="mt-4 text-4xl sm:text-5xl font-semibold leading-tight text-white">
+              Never Miss a Dose. Never Lose Track.
+            </h1>
+            <p class="mt-5 text-lg text-slate-200">
+              Personalized reminders, patient-first dashboards, and clinician insights that keep every
+              treatment plan aligned.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-4">
+              <a href="login.html" class="bg-[var(--color-brand-green)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Get Started</a>
+              <a href="features.html" class="py-3 px-6 rounded-xl border border-white/30 text-white font-semibold hover:bg-white/10 transition-all duration-300">Explore Features</a>
+            </div>
+          </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="footer-links">
-        <a href="#about">About Us</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Contact</a>
+          <div class="flex justify-center lg:justify-end">
+            <div class="relative w-64 h-64">
+              <svg viewBox="0 0 200 200" class="w-full h-full">
+                <circle cx="100" cy="100" r="82" stroke="rgba(255,255,255,0.15)" stroke-width="18" fill="none"></circle>
+                <circle cx="100" cy="100" r="82" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="0" transform="rotate(-90 100 100)"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <p class="text-5xl font-semibold">100%</p>
+                <p class="mt-2 text-sm uppercase tracking-[0.3em] text-slate-300">Adherence</p>
+              </div>
+              <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-white/10 border border-white/20 rounded-2xl px-6 py-3 text-sm text-slate-200">
+                Real-time streak tracking
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="detailed-features" class="w-full bg-white py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+          <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Premium care tools</p>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-semibold text-[var(--color-mydocto-teal)]">
+            Everything you need to manage your health
+          </h2>
+          <p class="mt-4 text-slate-500">
+            The DoseWise platform blends human-centered design with powerful adherence analytics so patients
+            and clinicians always stay in sync.
+          </p>
+        </div>
+
+        <div class="mt-16 flex flex-col gap-24">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span class="inline-flex items-center rounded-full bg-[var(--color-mydocto-teal)]/10 text-[var(--color-mydocto-teal)] text-xs font-semibold px-3 py-1 uppercase tracking-[0.2em]">Reminders</span>
+              <h3 class="mt-4 text-2xl sm:text-3xl font-semibold text-[var(--color-mydocto-teal)]">Real-time reminders</h3>
+              <p class="mt-4 text-slate-600">
+                Smart alerts adjust to patient routines, ensuring every dose is delivered with calm, consistent guidance.
+              </p>
+              <ul class="mt-5 space-y-2 text-slate-600">
+                <li>Multi-channel notifications</li>
+                <li>Context-aware timing suggestions</li>
+                <li>Daily adherence streak tracking</li>
+              </ul>
+            </div>
+            <div class="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0px_10px_30px_rgba(0,123,255,0.08)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.15)]">
+              <img src="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1200&q=80" alt="Real-time reminders" class="h-80 w-full object-cover rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0px_10px_30px_rgba(0,123,255,0.08)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.15)]">
+              <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80" alt="Secure records" class="h-80 w-full object-cover rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl" />
+            </div>
+            <div>
+              <span class="inline-flex items-center rounded-full bg-[var(--color-mydocto-teal)]/10 text-[var(--color-mydocto-teal)] text-xs font-semibold px-3 py-1 uppercase tracking-[0.2em]">Security</span>
+              <h3 class="mt-4 text-2xl sm:text-3xl font-semibold text-[var(--color-mydocto-teal)]">Secure records</h3>
+              <p class="mt-4 text-slate-600">
+                Keep medication histories, clinical notes, and patient updates protected with modern encryption
+                and role-based access.
+              </p>
+              <ul class="mt-5 space-y-2 text-slate-600">
+                <li>Encrypted patient data</li>
+                <li>Role-specific permissions</li>
+                <li>Audit-ready activity logs</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span class="inline-flex items-center rounded-full bg-[var(--color-mydocto-teal)]/10 text-[var(--color-mydocto-teal)] text-xs font-semibold px-3 py-1 uppercase tracking-[0.2em]">Communication</span>
+              <h3 class="mt-4 text-2xl sm:text-3xl font-semibold text-[var(--color-mydocto-teal)]">Doctor communication</h3>
+              <p class="mt-4 text-slate-600">
+                Built-in messaging and check-ins help clinicians guide patients through treatment changes and support.
+              </p>
+              <ul class="mt-5 space-y-2 text-slate-600">
+                <li>Secure clinician messaging</li>
+                <li>Follow-up prompts for care teams</li>
+                <li>Shared adherence timelines</li>
+              </ul>
+            </div>
+            <div class="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0px_10px_30px_rgba(0,123,255,0.08)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.15)]">
+              <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1200&q=80" alt="Doctor communication" class="h-80 w-full object-cover rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0px_10px_30px_rgba(0,123,255,0.08)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.15)]">
+              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Analytics and insights" class="h-80 w-full object-cover rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl" />
+            </div>
+            <div>
+              <span class="inline-flex items-center rounded-full bg-[var(--color-mydocto-teal)]/10 text-[var(--color-mydocto-teal)] text-xs font-semibold px-3 py-1 uppercase tracking-[0.2em]">Analytics</span>
+              <h3 class="mt-4 text-2xl sm:text-3xl font-semibold text-[var(--color-mydocto-teal)]">Analytics &amp; insights</h3>
+              <p class="mt-4 text-slate-600">
+                Visual dashboards translate adherence patterns into actionable insights for patients and providers.
+              </p>
+              <ul class="mt-5 space-y-2 text-slate-600">
+                <li>Trend visuals and summaries</li>
+                <li>Risk flags for missed doses</li>
+                <li>Exportable adherence reports</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-semibold text-[var(--color-mydocto-teal)]">Signature Features</h2>
+          <p class="mt-3 text-slate-500">Designed to keep patients confident and care teams connected.</p>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="group relative bg-white rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
+            <span class="absolute top-6 right-6 text-5xl font-semibold text-[var(--color-mydocto-teal)] opacity-20 group-hover:opacity-30 transition-all">01</span>
+            <h3 class="text-xl font-semibold text-slate-900">Smart reminders</h3>
+            <p class="mt-3 text-slate-500">Adaptive alerts via SMS, email, and app notifications that feel supportive, not noisy.</p>
+          </div>
+
+          <div class="group relative bg-white rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
+            <span class="absolute top-6 right-6 text-5xl font-semibold text-[var(--color-mydocto-teal)] opacity-20 group-hover:opacity-30 transition-all">02</span>
+            <h3 class="text-xl font-semibold text-slate-900">Patient timelines</h3>
+            <p class="mt-3 text-slate-500">Clear, calming schedules so patients know exactly what to take and when.</p>
+          </div>
+
+          <div class="group relative bg-white rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
+            <span class="absolute top-6 right-6 text-5xl font-semibold text-[var(--color-mydocto-teal)] opacity-20 group-hover:opacity-30 transition-all">03</span>
+            <h3 class="text-xl font-semibold text-slate-900">Clinician insights</h3>
+            <p class="mt-3 text-slate-500">Actionable adherence data and exportable reports for care teams.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div class="group relative overflow-hidden rounded-3xl bg-white border border-slate-100 shadow-[0px_20px_40px_rgba(15,23,42,0.12)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
+            <img src="asserts/ground.jpg.jpeg" alt="Patient experience" class="h-72 w-full object-cover" />
+            <div class="p-8">
+              <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Patients</p>
+              <h3 class="mt-3 text-2xl font-semibold text-slate-900">Gentle routines that feel personal</h3>
+              <p class="mt-4 text-slate-500">Simple reminders, daily streaks, and helpful guidance keep every dose on track.</p>
+            </div>
+            <div class="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+              <div class="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-[400ms] ease-out text-white text-sm font-semibold">
+                View the patient experience
+              </div>
+            </div>
+          </div>
+
+          <div class="group relative overflow-hidden rounded-3xl bg-white border border-slate-100 shadow-[0px_20px_40px_rgba(15,23,42,0.12)] transition-all duration-[400ms] ease-out hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
+            <img src="asserts/ckground.jpeg" alt="Doctor experience" class="h-72 w-full object-cover" />
+            <div class="p-8">
+              <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Doctors</p>
+              <h3 class="mt-3 text-2xl font-semibold text-slate-900">Clarity for every care plan</h3>
+              <p class="mt-4 text-slate-500">Dashboards highlight adherence trends so care teams can intervene early.</p>
+            </div>
+            <div class="absolute inset-0 flex items-end justify-center pb-8 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+              <div class="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-[400ms] ease-out text-white text-sm font-semibold">
+                Open the clinician portal
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-[#1D3557] via-[#1F4068] to-[#1D3557] rounded-3xl p-10 text-white shadow-[0px_20px_40px_rgba(15,23,42,0.3)]">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <h2 class="text-3xl font-semibold">Start building healthier routines</h2>
+              <p class="mt-4 text-slate-200">Get your reminders, review adherence trends, and keep every patient supported.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 lg:justify-end">
+              <a href="login.html" class="bg-white text-[#1D3557] font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Login / Portal</a>
+              <a href="contact us.html" class="py-3 px-6 rounded-xl border border-white/40 text-white font-semibold hover:bg-white/10 transition-all duration-300">Talk to Us</a>
+            </div>
+          </div>
+          <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+            <div class="bg-white/10 rounded-2xl p-4">
+              <p class="text-[#10b981] text-2xl font-semibold">50K+</p>
+              <p class="text-slate-200">Active Users</p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4">
+              <p class="text-[#10b981] text-2xl font-semibold">98%</p>
+              <p class="text-slate-200">Satisfaction</p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4">
+              <p class="text-[#10b981] text-2xl font-semibold">24/7</p>
+              <p class="text-slate-200">Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#1D3557] text-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <h3 class="text-lg font-semibold">DoseWise</h3>
+          <p class="mt-3 text-sm text-slate-300">A premium adherence platform built for AMPATH programs and the communities they serve.</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Address</h4>
+          <p class="mt-3 text-sm text-slate-300">AMPATH Centre, Eldoret, Kenya</p>
+          <p class="mt-1 text-sm text-slate-300">dawareminder@healthapp.test</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Links</h4>
+          <div class="mt-3 flex flex-col gap-2 text-sm">
+            <a href="index.html" class="hover:text-white transition-colors">Home</a>
+            <a href="about.html" class="hover:text-white transition-colors">About</a>
+            <a href="contact us.html" class="hover:text-white transition-colors">Contact</a>
+            <a href="login.html" class="hover:text-white transition-colors">Login / Portal</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300 border-t border-white/10 pt-6">
+        <p>&copy; 2026 DoseWise. A project by AMPATH.</p>
+        <p>Built for better healthcare outcomes.</p>
+      </div>
     </div>
-    <p>&copy; 2026 MediRemind. A project by AMPATH.</p>
   </footer>
-
 </body>
 </html>

@@ -3,102 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Us | Dawa Reminder</title>
+  <title>DoseWise | About Us</title>
 
-  <!-- Global CSS -->
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="./src/output.css" rel="stylesheet">
 </head>
 
-<body>
-
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar">
-    <div class="nav-logo">DawaReminder</div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html" class="active">About</a></li>
-      <li><a href="login.html" class="btn btn-primary">Sign In</a></li>
-    </ul>
-  </nav>
-
-  <!-- ===== HERO SECTION ===== -->
-  <section class="hero about-hero">
-    <div class="hero-content container">
-      <h1 class="animate-gradient-x">Why Dawa Reminder Exists</h1>
-      <p>
-        Helping patients take the right medication, at the right time, every day.
-      </p>
-      <a href="contact us.html" class="btn btn-primary" style="margin-top: 1.5rem;">Contact Us</a>
-    </div>
-  </section>
-
-  <!-- ===== MISSION, VISION & GOALS ===== -->
-  <section class="section light-bg">
-    <div class="container">
-      <h2 class="section-title animate-gradient" style="text-align:center;">Our Mission, Vision & Goals</h2>
-
-      <div class="features-grid" style="margin-top: 2rem;">
-        <!-- Mission Card -->
-        <div class="feature-card">
-          <h3>🎯 Our Mission</h3>
-          <p>
-            Dawa Reminder supports patients under long-term treatment, especially those receiving care through <strong>AMPATH</strong>.
-            Many patients miss doses due to busy schedules or forgetfulness. 
-          </p>
+<body class="bg-[var(--color-mydocto-bg)] text-slate-700 font-['Poppins'] antialiased">
+  <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <a href="index.html" class="inline-flex">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-mydocto-teal)] text-white text-sm font-bold shadow-md">DW</span>
+            <span class="text-2xl tracking-tight">
+              <span class="font-extrabold text-[var(--color-mydocto-teal)]">Dose</span><span class="font-medium text-[#10b981]">Wise</span>
+            </span>
+          </div>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="index.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Home</a>
+          <a href="index.html#features" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Features</a>
+          <a href="about.html" class="font-semibold text-[var(--color-mydocto-teal)]">About</a>
+          <a href="contact us.html" class="text-slate-600 hover:text-[var(--color-mydocto-teal)] transition-colors">Contact</a>
         </div>
-
-        <!-- Vision Card -->
-        <div class="feature-card">
-          <h3>🌟 Our Vision</h3>
-          <p>
-            To become the leading digital companion for patients, enabling better health adherence
-            and empowering communities to take control of their health journeys.
-          </p>
-        </div>
-
-        <!-- Goals Card -->
-        <div class="feature-card">
-          <h3>🏆 Our Goals</h3>
-          <ul style="text-align: left; padding-left: 1rem;">
-            <li>Provide timely and reliable medication reminders.</li>
-            <li>Offer simple and accessible medication tracking tools.</li>
-            <li>Improve overall treatment adherence and health outcomes.</li>
-            <li>Support healthcare programs and communities with actionable insights.</li>
-            <li>Continuously innovate to meet patient needs effectively.</li>
-          </ul>
-        </div>
+        <a href="login.html" class="hidden md:inline-flex bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Login / Portal</a>
       </div>
     </div>
-  </section>
+  </nav>
 
-  <!-- ===== CALL TO ACTION ===== -->
-  <section class="section">
-    <div class="container" style="text-align: center;">
-      <h2 class="section-title animate-gradient">Get Started Today</h2>
-      <p class="section-text">
-        Join thousands of patients improving their health with Dawa Reminder.
-      </p>
-      <a href="login.html" class="btn btn-primary">Start Free trial</a>
-    </div>
-  </section>
-
-
-  <!-- ===== FOOTER (from Dev 5) ===== -->
-    <footer class="footer">
-        <div class="footer-links">
-            <a href="#about">About Us</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact</a>
+  <main>
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-[var(--color-mydocto-bg)]"></div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Our purpose</p>
+            <h1 class="mt-4 text-4xl sm:text-5xl font-semibold text-[var(--color-mydocto-teal)] leading-tight">
+              Why DoseWise exists
+            </h1>
+            <p class="mt-5 text-lg text-slate-500">
+              We help patients take the right medication at the right time, every day. The platform
+              is built for AMPATH programs and the communities they serve.
+            </p>
+            <a href="contact us.html" class="mt-8 inline-flex bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Contact Us</a>
+          </div>
+          <div class="relative">
+            <div class="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-[var(--color-brand-blue)] opacity-20 blur-2xl"></div>
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-[0px_20px_40px_rgba(15,23,42,0.12)]">
+              <img src="asserts/ckground.jpeg" alt="Care team supporting patients" class="w-full h-72 object-cover rounded-2xl" />
+              <div class="mt-4 rounded-2xl bg-slate-50 p-4">
+                <p class="text-sm text-slate-500">Building trust through every reminder.</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <p>&copy; 2026 MediRemind. A project by AMPATH.</p>
-    </footer>
+      </div>
+    </section>
 
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-semibold text-[var(--color-mydocto-teal)]">Mission, Vision, and Goals</h2>
+          <p class="mt-3 text-slate-500">A clear direction that keeps patients at the center.</p>
+        </div>
 
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] hover:-translate-y-3 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.12)] transition-all duration-[400ms]">
+            <h3 class="text-lg font-semibold text-slate-900">Our Mission</h3>
+            <p class="mt-3 text-slate-500">
+              Support patients under long-term treatment with simple, reliable medication reminders
+              and easy-to-read schedules.
+            </p>
+          </div>
+          <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] hover:-translate-y-3 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.12)] transition-all duration-[400ms]">
+            <h3 class="text-lg font-semibold text-slate-900">Our Vision</h3>
+            <p class="mt-3 text-slate-500">
+              Become the trusted digital companion for patients and care teams, improving health
+              outcomes across communities.
+            </p>
+          </div>
+          <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0px_10px_30px_rgba(0,123,255,0.05)] hover:-translate-y-3 hover:shadow-[0px_20px_40px_rgba(0,123,255,0.12)] transition-all duration-[400ms]">
+            <h3 class="text-lg font-semibold text-slate-900">Our Goals</h3>
+            <ul class="mt-3 list-disc pl-5 space-y-2 text-slate-500">
+              <li>Provide timely and reliable medication reminders.</li>
+              <li>Offer simple and accessible medication tracking tools.</li>
+              <li>Improve overall treatment adherence and health outcomes.</li>
+              <li>Support healthcare programs with actionable insights.</li>
+              <li>Continuously innovate to meet patient needs effectively.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl p-10 border border-slate-100 shadow-[0px_20px_40px_rgba(15,23,42,0.12)] text-center">
+          <h2 class="text-3xl font-semibold text-[var(--color-mydocto-teal)]">Get started today</h2>
+          <p class="mt-3 text-slate-500">Join thousands of patients improving their health with DoseWise.</p>
+          <a href="login.html" class="mt-6 inline-flex bg-[var(--color-mydocto-teal)] text-white font-semibold py-3 px-6 rounded-xl hover:scale-105 hover:shadow-[0px_10px_30px_rgba(29,53,87,0.3)] transition-all duration-300">Start Free Trial</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#1D3557] text-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <h3 class="text-lg font-semibold">DoseWise</h3>
+          <p class="mt-3 text-sm text-slate-300">A premium adherence platform built for AMPATH programs and the communities they serve.</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Address</h4>
+          <p class="mt-3 text-sm text-slate-300">AMPATH Centre, Eldoret, Kenya</p>
+          <p class="mt-1 text-sm text-slate-300">dawareminder@healthapp.test</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Links</h4>
+          <div class="mt-3 flex flex-col gap-2 text-sm">
+            <a href="index.html" class="hover:text-white transition-colors">Home</a>
+            <a href="about.html" class="hover:text-white transition-colors">About</a>
+            <a href="contact us.html" class="hover:text-white transition-colors">Contact</a>
+            <a href="login.html" class="hover:text-white transition-colors">Login / Portal</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300 border-t border-white/10 pt-6">
+        <p>&copy; 2026 DoseWise. A project by AMPATH.</p>
+        <p>Built for better healthcare outcomes.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
