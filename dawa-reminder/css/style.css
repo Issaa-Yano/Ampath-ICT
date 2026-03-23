@@ -109,12 +109,19 @@ header .user-info p {
   align-items: center;
   padding: 1rem 2rem;
   background: linear-gradient(90deg, #6366f1, #ec4899);
+  color: #ffffff;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
+.nav-logo {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
 .navbar .nav-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
@@ -171,6 +178,10 @@ main, section {
   margin-bottom: 1rem;
 }
 
+.cta-container {
+  text-align: center;
+}
+
 /* =========================
    HERO SECTION
    ========================= */
@@ -198,6 +209,10 @@ main, section {
 .hero p {
   font-size: 1.125rem;
   color: #6b7280;
+}
+
+.hero-cta {
+  margin-top: 1.5rem;
 }
 
 /* =========================
@@ -393,6 +408,32 @@ button[type="submit"]:hover {
   color: white;
   font-size: 0.875rem;
   box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a:hover {
+  color: #facc15;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .navbar .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
 }
 
 /* =========================
