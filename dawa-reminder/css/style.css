@@ -22,11 +22,11 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 300%;
+  width: 700%;
   height: 100vh;
   display: flex;
-  animation: slide-step 9s infinite;
-  z-index: -2;
+  animation: slide-step 21s infinite;
+  z-index: 0;
 }
 
 .background-slideshow .slide {
@@ -42,9 +42,13 @@ body {
 }
 
 @keyframes slide-step {
-  0%, 33%   { transform: translateX(0); }
-  34%, 66%  { transform: translateX(-100vw); }
-  67%, 100% { transform: translateX(-200vw); }
+  0%, 12% { transform: translateX(0); }
+  14%, 26% { transform: translateX(-100vw); }
+  28%, 40% { transform: translateX(-200vw); }
+  42%, 54% { transform: translateX(-300vw); }
+  56%, 68% { transform: translateX(-400vw); }
+  70%, 82% { transform: translateX(-500vw); }
+  84%, 100% { transform: translateX(-600vw); }
 }
 
 body {
@@ -52,6 +56,13 @@ body {
   background: #f9fafb;
   color: #111827;
   line-height: 1.5;
+}
+
+.navbar,
+main,
+.footer {
+  position: relative;
+  z-index: 1;
 }
 
 a {
