@@ -3,25 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Portal</title>
-    <link rel="stylesheet" href="css/app-style.css">
+    <title>Doctor Portal | DoseWise</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="./src/output.css" rel="stylesheet">
+
+    <style>
+        /* =======================================================
+           DYNAMIC JS CLASSES (Doctor Dashboard Glassmorphism)
+           These style the elements injected by doctor-logic.js
+           ======================================================= */
+        
+        /* The dynamically generated Med Cards in the Live View */
+        .med-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 16px; 
+            border-radius: 0 24px 24px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .med-card:hover { transform: translateY(-2px); border-color: var(--color-mydocto-teal); }
+        .med-info { display: flex; align-items: center; gap: 15px; }
+        .med-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.8); color: var(--color-mydocto-teal); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .med-card h4 { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .med-card p { font-size: 0.85rem; color: #64748b; margin: 2px 0 0 0; }
+        .med-card.completed { background: rgba(16, 185, 129, 0.1); border-color: #10b981; }
+        .med-card.completed .med-icon { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .med-card.completed h4 { text-decoration: line-through; color: #64748b; }
+        .card-actions { font-size: 1.5rem; color: #10b981; font-weight: bold; }
+
+        /* Report Cards & History Lists injected by JS */
+        .doctor-report-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            margin-top: 12px;
+        }
+        .doctor-history-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .doctor-history-row:last-child { border-bottom: none; }
+        .doctor-history-date { font-weight: 700; color: #1e293b; font-size: 0.9rem; }
+        .doctor-history-value { font-weight: 600; color: #64748b; font-size: 0.85rem; }
+        
+        /* Recent Patients List Items */
+        .doctor-recent-item {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .doctor-recent-item:hover { background: rgba(255, 255, 255, 0.9); border-color: var(--color-mydocto-teal); transform: translateX(4px); }
+        .doctor-recent-name { font-weight: 700; color: #1e293b; }
+        .doctor-recent-id { font-size: 0.8rem; color: #64748b; }
+    </style>
 </head>
-<body class="doctor-dashboard-page">
-<div class="doctor-shell">
-    <header class="app-header doctor-header">
-        <div class="header-top">
+<body class="bg-gradient-to-br from-slate-50 via-[#e0e7ff] to-[#dbeafe] text-slate-800 font-['Poppins'] antialiased min-h-screen relative doctor-dashboard-page">
+
+<div class="max-w-4xl mx-auto p-4 md:p-8 doctor-shell">
+    
+    <header class="bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] mb-8 app-header doctor-header">
+        <div class="flex justify-between w-full items-center header-top">
             <div class="user-greeting">
-                <h1>Doctor Portal</h1>
-                <p>Search, review, and monitor patient adherence.</p>
+                <h1 class="text-2xl font-bold text-[var(--color-mydocto-teal)]">Doctor Portal</h1>
+                <p class="text-sm text-slate-500 font-medium mt-1">Search, review, and monitor patient adherence.</p>
             </div>
             <button
                 type="button"
-                class="profile-pic avatar-action"
+                class="w-[50px] h-[50px] bg-white/60 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-[var(--color-mydocto-teal)] shadow-md border-2 border-white/80 hover:-translate-y-[1px] transition-transform profile-pic avatar-action"
                 id="doctor-profile-avatar"
                 aria-label="Open doctor profile"
                 title="Open doctor profile"
@@ -30,113 +94,88 @@
     </header>
 
     <main class="schedule-container doctor-main">
-        <div class="section-head">
-            <h2>Recent Patients</h2>
+        
+        <div class="flex justify-between items-center mb-4 section-head">
+            <h2 class="text-lg font-bold text-slate-800">Recent Patients</h2>
         </div>
-        <div id="recent-patients" class="doctor-recent-list"></div>
+        <div id="recent-patients" class="doctor-recent-list mb-8"></div>
 
-        <section id="doctor-search-area">
-            <div class="section-head">
-                <h2>Find Patient</h2>
+        <section id="doctor-search-area" class="bg-white/60 backdrop-blur-lg p-6 rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl border border-white/70 shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-8">
+            <div class="mb-5 section-head">
+                <h2 class="text-lg font-bold text-[var(--color-mydocto-teal)]">Find Patient</h2>
             </div>
             <form id="doctor-search-form">
-                <div class="form-row" style="align-items:flex-end;">
-                    <div class="form-group" style="flex:1; margin-bottom:0;">
-                        <label for="patient-id-input">Enter Patient UID or Patient ID</label>
-                        <input type="text" id="patient-id-input" class="input-box" placeholder="Firebase UID or #ABC123">
+                <div class="flex flex-col md:flex-row gap-4 items-end form-row">
+                    <div class="flex-1 w-full form-group">
+                        <label for="patient-id-input" class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Enter Patient UID or Patient ID</label>
+                        <input type="text" id="patient-id-input" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" placeholder="Firebase UID or #ABC123">
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <button type="submit" id="search-patient-btn" class="btn-save doctor-search-btn">Search</button>
+                    <div class="w-full md:w-auto form-group">
+                        <button type="submit" id="search-patient-btn" class="w-full md:w-auto bg-gradient-to-r from-[var(--color-mydocto-teal)] to-[#2a4d7c] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all btn-save doctor-search-btn">Search</button>
                     </div>
                 </div>
             </form>
-            <p id="doctor-search-status" class="date-badge doctor-status-badge">Enter a Patient ID to begin.</p>
+            <p id="doctor-search-status" class="mt-4 inline-block bg-white/50 backdrop-blur-md border border-white/60 px-4 py-2 rounded-full text-[0.85rem] font-semibold text-slate-600 date-badge doctor-status-badge">Enter a Patient ID to begin.</p>
         </section>
 
         <section id="doctor-patient-view" class="hidden doctor-patient-view">
-            <div class="section-head">
-                <h2 id="doctor-patient-name">Patient Summary</h2>
-                <span id="doctor-patient-id" class="date-badge"></span>
+            
+            <div class="flex justify-between items-center mb-6 section-head">
+                <h2 id="doctor-patient-name" class="text-2xl font-bold text-[var(--color-mydocto-teal)]">Patient Summary</h2>
+                <span id="doctor-patient-id" class="bg-white/50 backdrop-blur-md border border-white/60 px-3.5 py-1.5 rounded-full text-[0.85rem] font-semibold text-slate-600 date-badge"></span>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="label">Age</span>
-                    <span class="value" id="doctor-age">--</span>
+            <div class="grid grid-cols-3 gap-4 mb-6 stats-grid">
+                <div class="bg-white/60 backdrop-blur-md p-4 rounded-2xl text-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/70 stat-card">
+                    <span class="block text-[0.8rem] text-slate-500 font-semibold uppercase tracking-wider label">Age</span>
+                    <span class="block text-xl text-[var(--color-mydocto-teal)] font-extrabold mt-1 value" id="doctor-age">--</span>
                 </div>
-                <div class="stat-card">
-                    <span class="label">Blood Type</span>
-                    <span class="value" id="doctor-blood">--</span>
+                <div class="bg-white/60 backdrop-blur-md p-4 rounded-2xl text-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/70 stat-card">
+                    <span class="block text-[0.8rem] text-slate-500 font-semibold uppercase tracking-wider label">Blood Type</span>
+                    <span class="block text-xl text-[var(--color-mydocto-teal)] font-extrabold mt-1 value" id="doctor-blood">--</span>
                 </div>
-                <div class="stat-card">
-                    <span class="label">Total Doses</span>
-                    <span class="value" id="doctor-total-doses">0</span>
+                <div class="bg-white/60 backdrop-blur-md p-4 rounded-2xl text-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/70 stat-card">
+                    <span class="block text-[0.8rem] text-slate-500 font-semibold uppercase tracking-wider label">Total Doses</span>
+                    <span class="block text-xl text-[var(--color-mydocto-teal)] font-extrabold mt-1 value" id="doctor-total-doses">0</span>
                 </div>
             </div>
 
-            <div class="doctor-tab-bar" role="tablist" aria-label="Doctor Dashboard Tabs">
-                <button
-                    type="button"
-                    class="doctor-tab active"
-                    data-tab="live"
-                    role="tab"
-                    aria-selected="true"
-                    aria-controls="doctor-live-panel"
-                >
-                    Live View
-                </button>
-                <button
-                    type="button"
-                    class="doctor-tab"
-                    data-tab="weekly"
-                    role="tab"
-                    aria-selected="false"
-                    aria-controls="doctor-weekly-panel"
-                >
-                    Weekly Report
-                </button>
-                <button
-                    type="button"
-                    class="doctor-tab"
-                    data-tab="monthly"
-                    role="tab"
-                    aria-selected="false"
-                    aria-controls="doctor-monthly-panel"
-                >
-                    Monthly History
-                </button>
+            <div class="flex bg-white/40 backdrop-blur-md rounded-2xl p-1 mb-6 border border-white/50 doctor-tab-bar" role="tablist" aria-label="Doctor Dashboard Tabs">
+                <button type="button" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all data-[active=true]:bg-white data-[active=true]:text-[var(--color-mydocto-teal)] data-[active=true]:shadow-sm text-slate-500 hover:text-slate-700 doctor-tab active" data-tab="live" role="tab" aria-selected="true" aria-controls="doctor-live-panel">Live View</button>
+                <button type="button" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all data-[active=true]:bg-white data-[active=true]:text-[var(--color-mydocto-teal)] data-[active=true]:shadow-sm text-slate-500 hover:text-slate-700 doctor-tab" data-tab="weekly" role="tab" aria-selected="false" aria-controls="doctor-weekly-panel">Weekly</button>
+                <button type="button" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all data-[active=true]:bg-white data-[active=true]:text-[var(--color-mydocto-teal)] data-[active=true]:shadow-sm text-slate-500 hover:text-slate-700 doctor-tab" data-tab="monthly" role="tab" aria-selected="false" aria-controls="doctor-monthly-panel">Monthly</button>
             </div>
 
             <section id="doctor-live-panel" class="doctor-tab-panel" role="tabpanel">
-                <div class="progress-card">
+                <div class="bg-white/60 backdrop-blur-lg p-6 rounded-3xl flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/70 progress-card">
                     <div class="progress-info">
-                        <h3>Adherence</h3>
-                        <p id="doctor-progress-percent">0%</p>
+                        <h3 class="text-sm text-slate-500 uppercase tracking-wider font-semibold">Adherence</h3>
+                        <p id="doctor-progress-percent" class="text-4xl font-extrabold text-[var(--color-mydocto-teal)] mt-1">0%</p>
                     </div>
-                    <div class="ring-wrapper">
+                    <div class="relative w-[80px] h-[80px] ring-wrapper">
                         <svg width="80" height="80">
-                            <circle cx="40" cy="40" r="30" class="ring-bg"></circle>
-                            <circle cx="40" cy="40" r="30" class="ring-progress" id="doctor-progress-ring"></circle>
+                            <circle cx="40" cy="40" r="30" class="fill-none stroke-slate-200 stroke-[8px] ring-bg"></circle>
+                            <circle cx="40" cy="40" r="30" class="fill-none stroke-[var(--color-mydocto-teal)] stroke-[8px] stroke-linecap-round origin-center -rotate-90 transition-all duration-500 ease-out ring-progress" id="doctor-progress-ring"></circle>
                         </svg>
                     </div>
                 </div>
 
-                <div class="section-head" style="margin-top:24px;">
-                    <h2>Today's Pills</h2>
-                    <button type="button" id="doctor-search-again-btn" class="btn-edit">Search Another</button>
+                <div class="flex justify-between items-center mt-8 mb-4 section-head">
+                    <h2 class="text-lg font-bold text-slate-800">Today's Pills</h2>
+                    <button type="button" id="doctor-search-again-btn" class="bg-white/50 backdrop-blur-md border border-white/60 px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-white/80 transition-all btn-edit">Search Another</button>
                 </div>
                 <div id="doctor-med-list"></div>
             </section>
 
-            <section id="doctor-weekly-panel" class="doctor-tab-panel hidden" role="tabpanel">
-                <div class="section-head" style="margin-top:8px;">
-                    <h2>Last 7 Days</h2>
+            <section id="doctor-weekly-panel" class="hidden doctor-tab-panel" role="tabpanel">
+                <div class="mt-4 mb-2 section-head">
+                    <h2 class="text-lg font-bold text-slate-800">Last 7 Days</h2>
                 </div>
                 <div id="doctor-weekly-report" class="doctor-report-card"></div>
             </section>
 
-            <section id="doctor-monthly-panel" class="doctor-tab-panel hidden" role="tabpanel">
-                <div id="doctor-monthly-summary" class="doctor-monthly-summary-card">
+            <section id="doctor-monthly-panel" class="hidden doctor-tab-panel" role="tabpanel">
+                <div id="doctor-monthly-summary" class="bg-white border border-[#bfdbfe] rounded-2xl p-4 text-base font-bold text-blue-700 shadow-sm doctor-monthly-summary-card">
                     Monthly Average: 0%
                 </div>
                 <div id="doctor-monthly-history" class="doctor-report-card doctor-history-list"></div>
@@ -145,23 +184,42 @@
     </main>
 </div>
 
-<div id="doctor-profile-modal" class="profile-modal hidden">
-    <div class="profile-modal-card doctor-profile-card">
-        <div class="profile-header doctor-profile-header">
-            <div class="profile-avatar doctor-profile-avatar" id="doctor-profile-avatar-large">DR</div>
-            <h2 id="doctor-profile-name">Doctor</h2>
-            <p id="doctor-profile-email">--</p>
-            <p id="doctor-profile-uid" class="doctor-profile-uid">UID: --</p>
+<div id="doctor-profile-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 profile-modal">
+    <div class="bg-white/90 backdrop-blur-2xl w-full max-w-[400px] rounded-[24px] p-8 shadow-2xl border border-white/80 profile-modal-card doctor-profile-card">
+        <div class="text-center mb-6 profile-header doctor-profile-header">
+            <div class="w-[90px] h-[90px] bg-white/60 backdrop-blur-md text-[var(--color-mydocto-teal)] rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-[15px] shadow-md border-2 border-white/80 profile-avatar doctor-profile-avatar" id="doctor-profile-avatar-large">DR</div>
+            <h2 id="doctor-profile-name" class="text-2xl font-bold text-[var(--color-mydocto-teal)]">Doctor</h2>
+            <p id="doctor-profile-email" class="text-slate-500 font-medium">--</p>
+            <p id="doctor-profile-uid" class="text-[0.8rem] text-slate-400 mt-1 doctor-profile-uid">UID: --</p>
         </div>
-        <div class="profile-form-actions">
-            <button type="button" class="btn-cancel" id="doctor-profile-close-btn">Close</button>
-            <button type="button" class="btn-save-inline doctor-logout-inline" id="doctor-logout-btn">
-                <i class="ph ph-sign-out"></i> Log Out
-            </button>
+        <div class="flex gap-2.5 mt-6 profile-form-actions">
+            <button type="button" class="flex-1 bg-white/50 backdrop-blur-md text-slate-600 border border-white/60 p-3.5 rounded-xl font-semibold hover:bg-white/80 transition-all btn-cancel" id="doctor-profile-close-btn">Close</button>
+            <button 
+    type="button" 
+    id="logout-btn" 
+    onclick="firebase.auth().signOut().then(() => { window.location.href = 'login.html'; }).catch(err => console.error(err));"
+    class="flex-1 bg-rose-500 text-white p-3.5 rounded-xl font-semibold shadow-md hover:bg-rose-600 transition-all flex items-center justify-center gap-2"
+>
+    <i class="ph ph-sign-out"></i> Log Out
+</button>
         </div>
     </div>
 </div>
 
+<script>
+    // Extremely small helper to make the Custom Tabs feel native and toggle active Tailwind colors
+    document.addEventListener("DOMContentLoaded", () => {
+        const tabs = document.querySelectorAll('.doctor-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.setAttribute('data-active', 'false'));
+                tab.setAttribute('data-active', 'true');
+            });
+        });
+        // Set first tab active initially
+        if(tabs.length > 0) tabs[0].setAttribute('data-active', 'true');
+    });
+</script>
 <script src="js/doctor-logic.js"></script>
 </body>
 </html>

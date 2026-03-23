@@ -839,6 +839,77 @@ function parseOccurrenceKey(key) {
 let currentFilter = "today";
 let editingRegimenId = null;
 
+// ================= 7. UI UPDATES =================
+function updateGamificationUI() {
+    let streak = 0;
+    let currentDay = new Date();
+    currentDay.setDate(currentDay.getDate() - 1); // Start checking from Yesterday
+
+    // 1. Count backwards from yesterday to find consecutive perfect days
+    while (true) {
+        const dateKey = getDateKey(currentDay);
+        const medsForDay = getOccurrencesForDate(DataService.getLocalRegimens(), dateKey);
+        
+        if (!medsForDay || medsForDay.length === 0) {
+            break; // No meds scheduled on this day, stop counting
+        }
+        
+        const total = medsForDay.length;
+        const taken = medsForDay.filter(m => m.taken).length;
+        
+        if (total > 0 && taken === total) {
+            streak++; // Perfect day!
+            currentDay.setDate(currentDay.getDate() - 1); // Go back one more day
+        } else {
+            break; // Missed a med, streak broken
+        }
+    }
+
+    // 2. Check Today (If today is also perfect, add +1 to streak)
+    const todayKey = getDateKey(new Date());
+    const todayMeds = getOccurrencesForDate(DataService.getLocalRegimens(), todayKey);
+    if (todayMeds && todayMeds.length > 0) {
+        const todayTotal = todayMeds.length;
+        const todayTaken = todayMeds.filter(m => m.taken).length;
+        if (todayTaken === todayTotal) {
+            streak++;
+        }
+    }
+
+    // 3. Update the Home Banner
+    const streakBanner = document.getElementById("streak-banner");
+    const streakText = document.getElementById("streak-count-text");
+    const streakMsg = document.getElementById("streak-message");
+    
+    if (streakBanner && streakText && streakMsg) {
+        if (streak > 0) {
+            streakText.textContent = `${streak} Day${streak > 1 ? 's' : ''}`;
+            
+            // Fun dynamic messaging
+            if (streak >= 7) streakMsg.textContent = "On Fire! 🔥";
+            else if (streak >= 3) streakMsg.textContent = "Great Job! 👏";
+            else streakMsg.textContent = "Keep it up!";
+
+            // Smoothly reveal the banner
+            streakBanner.classList.remove("hidden");
+            setTimeout(() => {
+                streakBanner.classList.remove("opacity-0", "scale-95");
+                streakBanner.classList.add("opacity-100", "scale-100");
+            }, 50);
+        } else {
+            // Hide banner if streak is 0
+            streakBanner.classList.add("opacity-0", "scale-95");
+            setTimeout(() => streakBanner.classList.add("hidden"), 300);
+        }
+    }
+
+    // 4. Update the Profile Page Stat Block
+    const profileStreakEl = document.getElementById("stat-streak");
+    if (profileStreakEl) {
+        profileStreakEl.textContent = streak;
+    }
+}
+
 function getFilteredOccurrences(regimens, filterType) {
     const now = new Date();
     const today = getTodayKey();
@@ -919,6 +990,9 @@ function updateProgress(regimens) {
         ring.style.strokeDashoffset = circumference - (percent / 100) * circumference;
         ring.style.stroke = percent >= 80 ? "#10b981" : percent >= 40 ? "#f59e0b" : "#ef4444";
     }
+
+    // --> ADD THIS LINE RIGHT HERE <--
+    updateGamificationUI();
 }
 
 function renderAll(regimens) {
@@ -1079,7 +1153,7 @@ window.switchView = function (viewName, preserveMedicationFormState) {
     const navItems = document.querySelectorAll(".nav-item");
     navItems.forEach((item) => item.classList.remove("active"));
     if (viewName === "dashboard" && navItems[0]) navItems[0].classList.add("active");
-    if (viewName === "profile" && navItems[1]) navItems[1].classList.add("active");
+    if (viewName === "profile" && navItems[2]) navItems[2].classList.add("active"); // Changed from 1 to 2!
 
     if (viewName === "add" && !preserveMedicationFormState) {
         resetMedicationFormMode(true);
@@ -1382,6 +1456,7 @@ async function copySharingPatientId() {
 function bindAppSettingsAndSharing() {
     const testSoundBtn = document.getElementById("test-sound-btn");
     const copyIdBtn = document.getElementById("copy-patient-id-btn");
+    const logoutBtn = document.getElementById("logout-btn"); // <-- 1. We grab the logout button
 
     if (testSoundBtn) {
         testSoundBtn.addEventListener("click", playTestNotificationSound);
@@ -1389,6 +1464,19 @@ function bindAppSettingsAndSharing() {
     if (copyIdBtn) {
         copyIdBtn.addEventListener("click", () => {
             copySharingPatientId();
+        });
+    }
+    
+    // <-- 2. We add the Firebase Logout Logic here -->
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            auth.signOut().then(() => {
+                // If your login page is named something else (like 'login.html'), change it here!
+                window.location.href = "index.html"; 
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+                alert("Failed to log out. Please try again.");
+            });
         });
     }
 }
@@ -1407,9 +1495,16 @@ document.addEventListener("DOMContentLoaded", () => {
     bindSyncEvents();
 
     auth.onAuthStateChanged((user) => {
-        const uid = (user && user.uid) || "test_patient_001";
+        if (!user) {
+            // SECURITY GUARD: Kick unauthenticated users back to login
+            window.location.replace("login.html");
+            return;
+        }
+
+        // Only run this if the user is legitimately logged in
+        const uid = user.uid;
         DataService.init(uid);
-        ProfileService.init(user || null);
+        ProfileService.init(user);
         NotificationSystem.setUser(uid);
         setSharingPatientId(uid);
     });

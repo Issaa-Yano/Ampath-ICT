@@ -1,4 +1,9 @@
 @import "tailwindcss";
+
+/* Tell Tailwind to scan the main folder for your HTML and JS files */
+@source "../**/*.html";
+@source "../**/*.js";
+
 @theme {
   --color-brand-blue: #007bff;
   --color-brand-green: #10b981;

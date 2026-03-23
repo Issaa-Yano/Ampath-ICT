@@ -345,16 +345,16 @@ async function resolvePatientUid(rawInput) {
 }
 
 function bindDoctorAuthGuard() {
-    if (typeof firebase === "undefined" || typeof firebase.auth !== "function") return;
-
-    firebase.auth().onAuthStateChanged((user) => {
+    if (!auth) return;
+    auth.onAuthStateChanged((user) => {
         if (!user) {
-            currentDoctorUser = null;
-            renderDoctorProfile(null);
-            setSearchStatus("Session not found. Please sign in again from Login.", true);
+            // SECURITY GUARD: Kick unauthenticated users out
+            window.location.replace("login.html");
             return;
         }
-
+        
+        // FUTURE STEP: Here is where we will eventually check if user.uid belongs to a registered DOCTOR.
+        // For now, we just ensure they are logged in.
         currentDoctorUser = user;
         renderDoctorProfile(user);
     });

@@ -3,40 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>  App</title>
-    <link rel="stylesheet" href="css/app-style.css">
+    <title>DoseWise | Patient Dashboard</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link href="./src/output.css" rel="stylesheet">
 
-<div class="app-container">
+    <style>
+        /* =======================================================
+           DYNAMIC JS CLASSES (DoseWise Glassmorphism Theme)
+           These classes style the exact elements injected by app-logic.js
+           ======================================================= */
+        .group-section { margin-bottom: 24px; grid-column: 1 / -1; }
+        .group-title { font-size: 0.85rem; color: #64748b; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .med-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px; 
+            border-radius: 0 24px 24px 24px; /* Asymmetric DoseWise shape */
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .med-card:hover { transform: translateY(-2px); border-color: var(--color-mydocto-teal); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+
+        .med-info { display: flex; align-items: center; gap: 15px; }
+        .med-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.8); color: var(--color-mydocto-teal); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); }
+        .med-card h4 { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .med-card p { font-size: 0.85rem; color: #64748b; margin: 2px 0 0 0; }
+
+        .timeline-badge {
+            display: inline-block; margin-top: 4px; padding: 4px 10px;
+            border-radius: 999px; background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.6);
+            color: #475569; font-size: 0.75rem; font-weight: 600;
+        }
+
+        /* Completed State */
+        .med-card.completed { background: rgba(16, 185, 129, 0.1); border-color: #10b981; opacity: 0.9; }
+        .med-card.completed .med-icon { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .med-card.completed h4 { text-decoration: line-through; color: #64748b; }
+
+        .btn-action {
+            background: var(--color-mydocto-teal); color: white; border: none;
+            padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer;
+            font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 4px 10px rgba(29, 53, 87, 0.2);
+        }
+        .btn-action:hover { transform: scale(1.05); background: #2a4d7c; }
+
+        .med-card.completed .btn-action { background: transparent; color: #10b981; padding: 0; font-size: 1.5rem; box-shadow: none; pointer-events: none; }
+
+        .card-actions { display: flex; align-items: center; gap: 8px; }
+
+        .btn-delete {
+            width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(244, 63, 94, 0.3);
+            color: #f43f5e; background: rgba(255, 228, 230, 0.7); display: inline-flex;
+            align-items: center; justify-content: center; cursor: pointer; transition: 0.2s ease;
+        }
+        .btn-delete:hover { background: #ffe4e6; border-color: #fda4af; transform: scale(1.1); }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); color: #475569; border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 999px; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+        }
+        .filter-btn:hover { background: rgba(255,255,255,0.8); }
+        .filter-btn.active { background: var(--color-mydocto-teal); color: white; border-color: var(--color-mydocto-teal); box-shadow: 0 4px 12px rgba(29, 53, 87, 0.3); }
+
+        /* Navigation Active State */
+        .nav-item.active { color: var(--color-mydocto-teal); background: rgba(255,255,255,0.8); border-left-color: var(--color-mydocto-teal); }
+        
+        /* Time Slots Grid (Add form) */
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-[#e0e7ff] to-[#dbeafe] text-slate-800 font-['Poppins'] antialiased md:overflow-hidden min-h-screen relative">
+
+<div class="w-full min-h-screen relative md:grid md:grid-cols-[280px_1fr] md:h-screen app-container">
     
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item active" onclick="switchView('dashboard')">
-            <i class="ph-fill ph-house"></i> <span>Home</span>
+    <nav class="bottom-nav fixed bottom-0 left-0 w-full bg-white/60 backdrop-blur-xl border-t border-white/50 p-[calc(8px+env(safe-area-inset-bottom))_12px_8px] grid grid-cols-3 items-center gap-2 z-[1000] shadow-[0_-4px_16px_rgba(15,23,42,0.08)] md:static md:grid-cols-1 md:flex md:flex-col md:pt-[40px] md:gap-2.5 md:h-screen md:border-r md:border-t-0 md:p-0 md:bg-white/40 md:shadow-none">
+        <a href="#" class="nav-item active flex flex-col items-center justify-center gap-[2px] min-h-[52px] rounded-xl text-slate-500 text-[0.72rem] font-semibold transition-all md:flex-row md:justify-start md:gap-[15px] md:px-[30px] md:py-[15px] md:text-base md:font-medium md:rounded-none md:border-l-4 md:border-transparent hover:bg-white/50 hover:text-[var(--color-mydocto-teal)]" onclick="switchView('dashboard')">
+            <i class="ph-fill ph-house text-xl md:text-2xl"></i> <span>Home</span>
         </a>
-        <a href="#">
-            <i class="ph ph-chart-bar"></i> <span>Reports</span>
+        <a href="#" class="nav-item flex flex-col items-center justify-center gap-[2px] min-h-[52px] rounded-xl text-slate-500 text-[0.72rem] font-semibold transition-all md:flex-row md:justify-start md:gap-[15px] md:px-[30px] md:py-[15px] md:text-base md:font-medium md:rounded-none md:border-l-4 md:border-transparent hover:bg-white/50 hover:text-[var(--color-mydocto-teal)]">
+            <i class="ph ph-chart-bar text-xl md:text-2xl"></i> <span>Reports</span>
         </a>
-        <a href="#" class="nav-item" onclick="switchView('profile')">
-            <i class="ph ph-user"></i> <span>Profile</span>
+        <a href="#" class="nav-item flex flex-col items-center justify-center gap-[2px] min-h-[52px] rounded-xl text-slate-500 text-[0.72rem] font-semibold transition-all md:flex-row md:justify-start md:gap-[15px] md:px-[30px] md:py-[15px] md:text-base md:font-medium md:rounded-none md:border-l-4 md:border-transparent hover:bg-white/50 hover:text-[var(--color-mydocto-teal)]" onclick="switchView('profile')">
+            <i class="ph ph-user text-xl md:text-2xl"></i> <span>Profile</span>
        </a>
     </nav>
 
-    <div id="view-dashboard">
-        <header class="app-header">
-            <div class="header-top">
+    <div id="view-dashboard" class="md:col-start-2 md:overflow-y-auto md:h-screen md:p-10 pb-[110px] md:pb-10">
+        
+        <header class="bg-white/40 backdrop-blur-md p-[30px] rounded-b-[30px] md:bg-transparent md:p-0 md:rounded-none md:mb-10 md:block border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] md:border-none md:shadow-none app-header">
+            
+            <div class="flex justify-between w-full items-center header-top">
                 <div class="user-greeting">
-                    <h1 id="greeting">Hello, Patient 👋</h1>
-                    <p id="doses-remaining">Loading...</p>
+                    <h1 id="greeting" class="text-2xl font-bold text-[var(--color-mydocto-teal)]">Hello, Patient 👋</h1>
+                    <p id="doses-remaining" class="text-sm text-slate-500 font-semibold mt-1">Loading...</p>
                 </div>
                 <button
                     type="button"
-                    class="profile-pic avatar-action"
+                    class="w-[45px] h-[45px] bg-white/60 backdrop-blur-md rounded-full flex items-center justify-center font-bold text-[var(--color-mydocto-teal)] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/60 hover:-translate-y-[1px] transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-300 profile-pic avatar-action"
                     id="header-profile-pic"
                     aria-label="Open profile"
                     title="Open profile"
@@ -44,59 +117,78 @@
                 >AJ</button>
             </div>
 
-            <div class="progress-card">
+            <div class="bg-white/60 backdrop-blur-lg p-5 rounded-tl-none rounded-tr-3xl rounded-br-3xl rounded-bl-3xl flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/70 mt-6 md:min-w-[300px] progress-card">
                 <div class="progress-info">
-                    <h3>Your Progress</h3>
-                    <p id="progress-percent">0%</p>
+                    <h3 class="text-[0.9rem] text-slate-500 uppercase tracking-wider font-semibold">Your Progress</h3>
+                    <p id="progress-percent" class="text-4xl font-extrabold text-[var(--color-mydocto-teal)] mt-1">0%</p>
                 </div>
-                <div class="ring-wrapper">
+                <div class="relative w-[80px] h-[80px] ring-wrapper">
                     <svg width="80" height="80">
-                        <circle cx="40" cy="40" r="30" class="ring-bg"></circle>
-                        <circle cx="40" cy="40" r="30" class="ring-progress" id="progress-ring"></circle>
+                        <circle cx="40" cy="40" r="30" class="fill-none stroke-slate-200 stroke-[8px] ring-bg"></circle>
+                        <circle cx="40" cy="40" r="30" class="fill-none stroke-[var(--color-mydocto-teal)] stroke-[8px] stroke-linecap-round origin-center -rotate-90 transition-all duration-500 ease-out ring-progress" id="progress-ring"></circle>
                     </svg>
                 </div>
             </div>
         </header>
 
-        <main class="schedule-container">
-            <div class="section-head">
-                <h2>Today's Schedule</h2>
-                <span id="current-date" class="date-badge">Today</span>
+        <main class="mt-5 px-[30px] md:px-0 schedule-container">
+            <div id="streak-banner" class="bg-gradient-to-r from-orange-400 to-rose-500 rounded-2xl p-5 mb-6 shadow-[0_8px_30px_rgba(244,63,94,0.3)] text-white flex justify-between items-center border border-white/20 transition-all duration-500 transform scale-95 opacity-0 hidden">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-2xl shadow-inner border border-white/30" id="streak-icon">
+                        🔥
+                    </div>
+                    <div>
+                        <h3 class="text-[0.8rem] font-semibold uppercase tracking-wider opacity-90">Current Streak</h3>
+                        <p class="text-2xl font-extrabold tracking-tight" id="streak-count-text">0 Days</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-[0.75rem] font-bold uppercase tracking-wider bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm" id="streak-message">
+                        Let's Go!
+                    </p>
+                </div>
             </div>
-            <div id="med-filter-bar" style="display:flex; gap:10px; margin-bottom:20px;"></div>
-            <div id="schedule-list"></div>
+
+            <div class="flex justify-between items-center mb-5 section-head">
+                <h2 class="text-[1.2rem] font-bold text-slate-800">Today's Schedule</h2>
+                <span id="current-date" class="bg-white/50 backdrop-blur-md border border-white/60 px-3.5 py-1.5 rounded-full text-[0.85rem] font-semibold text-slate-600 date-badge">Today</span>
+            </div>
+            
+            <div id="med-filter-bar" class="flex gap-2.5 mb-5 flex-wrap"></div>
+            
+            <div id="schedule-list" class="md:grid md:grid-cols-[repeat(auto-fill,minmax(350px,1fr))] md:gap-5"></div>
         </main>
 
-        <button class="fab" onclick="switchView('add')">
+        <button class="fixed bottom-[100px] right-6 md:absolute md:bottom-10 md:right-10 z-[99] w-16 h-16 bg-gradient-to-r from-[var(--color-mydocto-teal)] to-[#2a4d7c] text-white rounded-full border-none text-[28px] shadow-[0_10px_25px_rgba(29,53,87,0.4)] flex items-center justify-center hover:scale-110 transition-transform duration-200 fab" onclick="switchView('add')">
             <i class="ph-bold ph-plus"></i>
         </button>
     </div>
 
-    <div id="view-add" class="hidden">
-        <div class="form-header">
-            <button class="back-btn" onclick="switchView('dashboard')">
+    <div id="view-add" class="hidden md:col-start-2 md:overflow-y-auto md:h-screen md:p-10 pb-[110px] md:pb-10 px-[30px] pt-[30px]">
+        <div class="flex items-center gap-[15px] border-b border-white/40 pb-5 mb-5 md:p-[30px] md:pb-5 form-header">
+            <button class="bg-transparent border-none text-2xl cursor-pointer text-slate-800 back-btn" onclick="switchView('dashboard')">
                 <i class="ph-bold ph-arrow-left"></i>
             </button>
-            <h2>Add Medication</h2>
+            <h2 class="text-xl font-bold text-[var(--color-mydocto-teal)]">Add Medication</h2>
         </div>
 
-        <form id="add-med-form">
-            <div class="form-group">
-                <label>Medication Name</label>
-                <div class="input-wrapper">
-                    <i class="ph ph-pill"></i>
-                    <input type="text" id="med-name" placeholder="e.g. Amoxicillin" required>
+        <form id="add-med-form" class="max-w-[600px] md:mx-auto">
+            <div class="mb-6 form-group">
+                <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Medication Name</label>
+                <div class="relative input-wrapper">
+                    <i class="ph ph-pill absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-[1.2rem]"></i>
+                    <input type="text" id="med-name" placeholder="e.g. Amoxicillin" required class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 pl-12 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner">
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Amount</label>
-                    <input type="number" id="med-amount" value="1" class="input-box">
+            <div class="grid grid-cols-2 gap-[15px] form-row">
+                <div class="mb-6 form-group">
+                    <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Amount</label>
+                    <input type="number" id="med-amount" value="1" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box">
                 </div>
-                <div class="form-group">
-                    <label>Unit</label>
-                    <select id="med-unit" class="input-box">
+                <div class="mb-6 form-group">
+                    <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Unit</label>
+                    <select id="med-unit" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box">
                         <option value="Tablet">Tablet</option>
                         <option value="mg">mg</option>
                         <option value="ml">ml</option>
@@ -104,150 +196,99 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Frequency</label>
-                <select id="med-frequency" class="input-box" onchange="updateTimeInputs()">
+            <div class="mb-6 form-group">
+                <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Frequency</label>
+                <select id="med-frequency" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" onchange="updateTimeInputs()">
                     <option value="1">Once a day</option>
                     <option value="2">Twice a day</option>
                     <option value="3">3x a day</option>
                 </select>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Start Date</label>
-                    <input type="date" id="med-start-date" class="input-box" required>
+            <div class="grid grid-cols-2 gap-[15px] form-row">
+                <div class="mb-6 form-group">
+                    <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Start Date</label>
+                    <input type="date" id="med-start-date" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" required>
                 </div>
-                <div class="form-group">
-                    <label>End Date</label>
-                    <input type="date" id="med-end-date" class="input-box" required>
+                <div class="mb-6 form-group">
+                    <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">End Date</label>
+                    <input type="date" id="med-end-date" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" required>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Intake Times</label>
-                <div id="time-slots-container" class="time-grid">
-                    </div>
+            <div class="mb-6 form-group">
+                <label class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Intake Times</label>
+                <div id="time-slots-container" class="time-grid"></div>
             </div>
 
-            <button type="submit" class="btn-save">Save Schedule</button>
+            <button type="submit" class="w-full bg-gradient-to-r from-[var(--color-mydocto-teal)] to-[#2a4d7c] text-white p-4 rounded-xl border-none text-base font-bold mt-2.5 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all btn-save">Save Schedule</button>
         </form>
     </div>
-<div id="view-profile" class="hidden">
-    <div class="dashboard-wrapper">
-        
-        <div class="profile-header">
-            <button
-                type="button"
-                class="profile-avatar avatar-action"
-                id="profile-avatar"
-                aria-label="Edit profile"
-                title="Edit profile"
-            >AJ</button>
-            <h2 id="profile-name">Alex Johnson</h2>
-            <p id="profile-patient-id">Patient ID: #883920</p>
-            <button class="btn-edit" id="edit-profile-btn" type="button">Edit Profile</button>
-        </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="label">Age</span>
-                <span class="value" id="profile-age">34</span>
+    <div id="view-profile" class="hidden md:col-start-2 md:overflow-y-auto md:h-screen md:p-10 pb-[110px] md:pb-10 px-[30px] pt-[30px]">
+        <div class="dashboard-wrapper">
+            <div class="flex items-center gap-[15px] border-b border-white/40 pb-5 mb-5">
+                <button type="button" class="bg-white/50 backdrop-blur-md border border-white/60 text-2xl w-10 h-10 rounded-full flex items-center justify-center cursor-pointer text-slate-800 shadow-sm hover:bg-white/80 transition-all" onclick="switchView('dashboard')">
+                    <i class="ph-bold ph-arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold text-[var(--color-mydocto-teal)]">Settings</h2>
             </div>
-            <div class="stat-card">
-                <span class="label">Weight</span>
-                <span class="value" id="profile-weight">72kg</span>
+            <div class="text-center mb-[30px] profile-header">
+                <button type="button" class="w-[90px] h-[90px] bg-white/60 backdrop-blur-md text-[var(--color-mydocto-teal)] rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-[15px] shadow-md border-2 border-white/80 hover:-translate-y-[1px] transition-transform profile-avatar avatar-action" id="profile-avatar" aria-label="Edit profile" title="Edit profile">AJ</button>
+                <h2 id="profile-name" class="text-2xl font-bold text-[var(--color-mydocto-teal)]">Alex Johnson</h2>
+                <p id="profile-patient-id" class="text-slate-500 font-medium">Patient ID: Loading...</p>
             </div>
-            <div class="stat-card">
-                <span class="label">Blood</span>
-                <span class="value" id="profile-blood">O+</span>
-            </div>
-        </div>
 
-        <div class="menu-list">
-            <div class="menu-item menu-item-control" id="notifications-menu-item">
-                <div class="menu-icon"><i class="ph ph-bell"></i></div>
-                <div class="menu-text">
-                    <h4>Notifications</h4>
-                    <p id="notification-status-text">Checking...</p>
+            <div class="flex justify-center gap-5 mb-[30px] flex-wrap profile-stats">
+                <div class="bg-white/60 backdrop-blur-md p-[15px_25px] rounded-2xl text-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/70 stat-box">
+                    <h4 id="stat-streak" class="text-2xl text-[var(--color-mydocto-teal)] font-extrabold">0</h4>
+                    <p class="text-[0.8rem] text-slate-500 font-semibold uppercase tracking-wider">Day Streak</p>
                 </div>
-                <button type="button" id="notification-toggle-btn" class="menu-toggle-btn">Enable</button>
+                <div class="bg-white/60 backdrop-blur-md p-[15px_25px] rounded-2xl text-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] border border-white/70 stat-box">
+                    <h4 id="stat-adherence" class="text-2xl text-[var(--color-mydocto-teal)] font-extrabold">0%</h4>
+                    <p class="text-[0.8rem] text-slate-500 font-semibold uppercase tracking-wider">Adherence</p>
+                </div>
             </div>
 
-            <div class="menu-item">
-                <div class="menu-icon"><i class="ph ph-shield-check"></i></div>
-                <div class="menu-text">
-                    <h4>Privacy & Security</h4>
-                    <p>Password, 2FA</p>
-                </div>
-                <i class="ph ph-caret-right"></i>
-            </div>
-
-            <div class="menu-item">
-                <div class="menu-icon"><i class="ph ph-gear"></i></div>
-                <div class="menu-text">
-                    <h4>App Settings</h4>
-                    <p>Language, Theme</p>
-                </div>
-                <i class="ph ph-caret-right"></i>
+            <div class="grid gap-3 max-w-[400px] mx-auto profile-actions">
+                <button type="button" class="bg-white/40 backdrop-blur-sm border-2 border-[var(--color-mydocto-teal)] text-[var(--color-mydocto-teal)] p-3.5 rounded-xl text-base font-semibold flex items-center justify-center gap-2.5 hover:bg-[var(--color-mydocto-teal)] hover:text-white transition-all btn-outline" id="test-sound-btn">
+                    <i class="ph ph-bell-ringing"></i> Test Notification Sound
+                </button>
+                <button type="button" class="bg-white/40 backdrop-blur-sm border-2 border-[var(--color-mydocto-teal)] text-[var(--color-mydocto-teal)] p-3.5 rounded-xl text-base font-semibold flex items-center justify-center gap-2.5 hover:bg-[var(--color-mydocto-teal)] hover:text-white transition-all btn-outline" id="copy-patient-id-btn">
+                    <i class="ph ph-copy"></i> Copy Patient ID for Doctor
+                </button>
+                <button type="button" class="bg-white/40 backdrop-blur-sm border-2 border-rose-500 text-rose-500 p-3.5 rounded-xl text-base font-semibold flex items-center justify-center gap-2.5 hover:bg-rose-500 hover:text-white transition-all btn-outline btn-logout" id="logout-btn">
+                    <i class="ph ph-sign-out"></i> Log Out
+                </button>
             </div>
         </div>
-
-        <div class="menu-list" id="sharing-settings-panel">
-            <div class="menu-item" style="cursor:default;">
-                <div class="menu-icon"><i class="ph ph-share-network"></i></div>
-                <div class="menu-text">
-                    <h4>App Settings & Sharing</h4>
-                    <p>Unlock sound and share your patient ID with your doctor.</p>
-                </div>
-            </div>
-            <div class="menu-item menu-item-control" style="cursor:default;">
-                <div class="menu-icon"><i class="ph ph-speaker-high"></i></div>
-                <div class="menu-text">
-                    <h4>Notification Sound</h4>
-                    <p>Play a test sound to enable browser audio prompts.</p>
-                </div>
-                <button type="button" id="test-sound-btn" class="menu-toggle-btn">Test Sound</button>
-            </div>
-            <div class="menu-item menu-item-control" style="cursor:default; align-items:flex-start;">
-                <div class="menu-icon"><i class="ph ph-identification-card"></i></div>
-                <div class="menu-text">
-                    <h4>My Patient ID</h4>
-                    <input type="text" id="my-patient-id" class="input-box" value="" readonly style="margin-top:8px;">
-                </div>
-                <button type="button" id="copy-patient-id-btn" class="menu-toggle-btn">Copy</button>
-            </div>
-        </div>
-
-        <button class="btn-logout" onclick="window.location.href='index.html'">
-            <i class="ph ph-sign-out"></i> Log Out
-        </button>
-
     </div>
 </div>
 
-</div>
-
-<div id="profile-modal" class="profile-modal hidden">
-    <div class="profile-modal-card">
-        <h3>Edit Profile</h3>
-        <form id="profile-form">
-            <div class="profile-form-grid">
+<div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 modal-overlay">
+    <div class="bg-white/90 backdrop-blur-2xl w-full max-w-[400px] rounded-[24px] p-6 shadow-2xl border border-white/80 modal-card">
+        <div class="text-center mb-5 modal-header">
+            <h3 class="text-xl font-bold text-[var(--color-mydocto-teal)]">Edit Health Profile</h3>
+        </div>
+        <form id="edit-profile-form">
+            <div class="space-y-4">
                 <div class="form-group">
-                    <label for="profile-input-name">Full Name</label>
-                    <input type="text" id="profile-input-name" class="input-box" required>
+                    <label for="profile-input-name" class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Full Name</label>
+                    <input type="text" id="profile-input-name" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" required placeholder="e.g. Alex Johnson">
+                </div>
+                <div class="grid grid-cols-2 gap-[15px]">
+                    <div class="form-group">
+                        <label for="profile-input-age" class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Age</label>
+                        <input type="number" id="profile-input-age" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" min="0" max="130" placeholder="e.g. 34">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-input-weight" class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Weight</label>
+                        <input type="text" id="profile-input-weight" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box" placeholder="e.g. 72 kg">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="profile-input-age">Age</label>
-                    <input type="number" id="profile-input-age" class="input-box" min="0" max="130" placeholder="e.g. 34">
-                </div>
-                <div class="form-group">
-                    <label for="profile-input-weight">Weight</label>
-                    <input type="text" id="profile-input-weight" class="input-box" placeholder="e.g. 72 kg">
-                </div>
-                <div class="form-group">
-                    <label for="profile-input-blood">Blood Group</label>
-                    <select id="profile-input-blood" class="input-box">
+                    <label for="profile-input-blood" class="block mb-2 font-semibold text-[0.9rem] text-slate-700">Blood Group</label>
+                    <select id="profile-input-blood" class="w-full bg-white/50 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10b981] transition-all shadow-inner input-box">
                         <option value="">Select blood group</option>
                         <option value="A+">A+</option>
                         <option value="A-">A-</option>
@@ -260,9 +301,9 @@
                     </select>
                 </div>
             </div>
-            <div class="profile-form-actions">
-                <button type="button" class="btn-cancel" id="cancel-profile-btn">Cancel</button>
-                <button type="submit" class="btn-save-inline">Save Profile</button>
+            <div class="flex gap-2.5 mt-6 profile-form-actions">
+                <button type="button" class="flex-1 bg-white/50 backdrop-blur-md text-slate-600 border border-white/60 p-3.5 rounded-xl font-semibold hover:bg-white/80 transition-all btn-cancel" id="cancel-profile-btn">Cancel</button>
+                <button type="submit" class="flex-1 bg-gradient-to-r from-[var(--color-mydocto-teal)] to-[#2a4d7c] text-white p-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all btn-save-inline">Save Profile</button>
             </div>
         </form>
     </div>
