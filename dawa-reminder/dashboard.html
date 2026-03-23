@@ -84,6 +84,12 @@
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-[#e0e7ff] to-[#dbeafe] text-slate-800 font-['Poppins'] antialiased md:overflow-hidden min-h-screen relative">
 
+<div id="auth-guard-overlay" class="fixed inset-0 z-[999999] bg-slate-50 flex flex-col items-center justify-center">
+    <div class="w-12 h-12 border-4 border-[var(--color-mydocto-teal)] border-t-transparent rounded-full animate-spin mb-4"></div>
+    <h2 class="text-xl font-bold text-[var(--color-mydocto-teal)]">DoseWise</h2>
+    <p class="text-slate-500 font-medium mt-2 animate-pulse">Verifying Secure Connection...</p>
+</div>
+
 <div class="w-full min-h-screen relative md:grid md:grid-cols-[280px_1fr] md:h-screen app-container">
     
     <nav class="bottom-nav fixed bottom-0 left-0 w-full bg-white/60 backdrop-blur-xl border-t border-white/50 p-[calc(8px+env(safe-area-inset-bottom))_12px_8px] grid grid-cols-3 items-center gap-2 z-[1000] shadow-[0_-4px_16px_rgba(15,23,42,0.08)] md:static md:grid-cols-1 md:flex md:flex-col md:pt-[40px] md:gap-2.5 md:h-screen md:border-r md:border-t-0 md:p-0 md:bg-white/40 md:shadow-none">

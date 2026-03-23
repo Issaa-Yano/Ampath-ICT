@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDOOlaIJL1A5trkzQ-Lz_8vn4eNsN-XzG8",
@@ -12,6 +13,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
 const form = document.getElementById("unified-login-form");
 const errorEl = document.getElementById("error-message");
@@ -143,14 +145,81 @@ if (form) {
 
         try {
             if (activeAction === "register") {
-                await createUserWithEmailAndPassword(auth, email, password);
+                const userCreds = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // STAMP THE ROLE IN THE DATABASE
+                const userRole = getIsDoctorMode() ? "doctor" : "patient";
+                await set(ref(db, 'users/' + userCreds.user.uid), {
+                    role: userRole,
+                    email: email,
+                    createdAt: new Date().toISOString()
+                });
+                
+                window.location.href = getRouteForMode();
             } else {
-                await signInWithEmailAndPassword(auth, email, password);
+                // 1. Authenticate them first
+                const userCreds = await signInWithEmailAndPassword(auth, email, password);
+                
+                // 2. STRICT LOGIN: Check their true role in the database
+                const snapshot = await get(ref(db, 'users/' + userCreds.user.uid));
+                
+                if (snapshot.exists() && snapshot.val().role) {
+                    const dbRole = snapshot.val().role;
+                    const attemptedRole = getIsDoctorMode() ? "doctor" : "patient";
+                    
+                    // 3. THE WALL: If they are using the wrong tab, deny access!
+                    if (dbRole !== attemptedRole) {
+                        await signOut(auth); // Instantly revoke their session
+                        
+                        // Throw a custom error to the catch block
+                        throw {
+                            custom: true,
+                            message: `Access Denied. You are registered as a ${dbRole}. Please switch to the ${dbRole === 'doctor' ? 'Doctor' : 'Patient'} tab to log in.`
+                        };
+                    }
+
+                    // 4. If they used the correct tab, let them in
+                    window.location.href = dbRole === "doctor" ? "doctordashboard.html" : "dashboard.html";
+                } else {
+                    window.location.href = getRouteForMode(); // Fallback for legacy test accounts
+                }
             }
-            window.location.href = getRouteForMode();
         } catch (error) {
-            const actionWord = activeAction === "register" ? "Account creation" : "Login";
-            showError(error && error.message ? `${actionWord} failed: ${error.message}` : `${actionWord} failed. Please try again.`);
+            let friendlyMessage = "An unexpected error occurred. Please try again.";
+            
+            // Check if it's our custom Access Denied error
+            if (error.custom) {
+                friendlyMessage = error.message;
+            } 
+            // Otherwise, translate technical Firebase error codes
+            else if (error.code) {
+                switch (error.code) {
+                    case 'auth/invalid-credential':
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        friendlyMessage = "Incorrect email or password. Please try again.";
+                        break;
+                    case 'auth/email-already-in-use':
+                        friendlyMessage = "An account with this email already exists. Please log in instead.";
+                        break;
+                    case 'auth/weak-password':
+                        friendlyMessage = "Your password is too weak. Please use at least 6 characters.";
+                        break;
+                    case 'auth/invalid-email':
+                        friendlyMessage = "Please enter a valid email address.";
+                        break;
+                    case 'auth/network-request-failed':
+                        friendlyMessage = "Network connection failed. Please check your internet and try again.";
+                        break;
+                    case 'auth/too-many-requests':
+                        friendlyMessage = "Too many failed attempts. Please wait a moment and try again.";
+                        break;
+                    default:
+                        friendlyMessage = error.message; 
+                }
+            }
+            
+            showError(friendlyMessage);
         }
     });
 }

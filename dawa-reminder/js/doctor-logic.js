@@ -15,6 +15,7 @@ if (typeof firebase !== "undefined" && !firebase.apps.length) {
 }
 
 const db = typeof firebase !== "undefined" ? firebase.database() : null;
+const auth = typeof firebase !== "undefined" ? firebase.auth() : null;
 const DOCTOR_RECENTS_KEY = "doctor_recents";
 const DOCTOR_REPORT_CACHE_KEY = "doctor_report_cache_v1";
 const DOCTOR_TAB_TO_PANEL = {
@@ -348,15 +349,31 @@ function bindDoctorAuthGuard() {
     if (!auth) return;
     auth.onAuthStateChanged((user) => {
         if (!user) {
-            // SECURITY GUARD: Kick unauthenticated users out
             window.location.replace("login.html");
             return;
         }
         
-        // FUTURE STEP: Here is where we will eventually check if user.uid belongs to a registered DOCTOR.
-        // For now, we just ensure they are logged in.
-        currentDoctorUser = user;
-        renderDoctorProfile(user);
+        // THE BOUNCER: Check if they are actually a doctor
+        db.ref("users/" + user.uid).once("value").then((snapshot) => {
+            const userData = snapshot.val();
+            
+            // If they are NOT a doctor, kick them to the Patient Dashboard
+            if (!userData || userData.role !== "doctor") {
+                window.location.replace("dashboard.html");
+                return;
+            }
+            
+            // IF THEY PASS: Remove the secure loading overlay so they can see the app
+            const overlay = document.getElementById("auth-guard-overlay");
+            if (overlay) overlay.remove();
+            
+            // Let them in
+            currentDoctorUser = user;
+            renderDoctorProfile(user);
+        }).catch((error) => {
+            console.error("Auth Error:", error);
+            window.location.replace("login.html");
+        });
     });
 }
 

@@ -75,6 +75,12 @@
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-[#e0e7ff] to-[#dbeafe] text-slate-800 font-['Poppins'] antialiased min-h-screen relative doctor-dashboard-page">
 
+<div id="auth-guard-overlay" class="fixed inset-0 z-[999999] bg-slate-50 flex flex-col items-center justify-center">
+    <div class="w-12 h-12 border-4 border-[var(--color-mydocto-teal)] border-t-transparent rounded-full animate-spin mb-4"></div>
+    <h2 class="text-xl font-bold text-[var(--color-mydocto-teal)]">DoseWise</h2>
+    <p class="text-slate-500 font-medium mt-2 animate-pulse">Verifying Secure Connection...</p>
+</div>
+
 <div class="max-w-4xl mx-auto p-4 md:p-8 doctor-shell">
     
     <header class="bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] mb-8 app-header doctor-header">

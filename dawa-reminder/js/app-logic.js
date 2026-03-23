@@ -1495,17 +1495,33 @@ document.addEventListener("DOMContentLoaded", () => {
     bindSyncEvents();
 
     auth.onAuthStateChanged((user) => {
+        // Kick out anyone not logged in
         if (!user) {
-            // SECURITY GUARD: Kick unauthenticated users back to login
             window.location.replace("login.html");
             return;
         }
 
-        // Only run this if the user is legitimately logged in
         const uid = user.uid;
-        DataService.init(uid);
-        ProfileService.init(user);
-        NotificationSystem.setUser(uid);
-        setSharingPatientId(uid);
+
+        // THE BOUNCER: Check their role
+        db.ref("users/" + uid).once("value").then((snapshot) => {
+            const userData = snapshot.val();
+            
+            // If a DOCTOR tries to access the Patient view, kick them back to the Doctor Portal
+            if (userData && userData.role === "doctor") {
+                window.location.replace("doctordashboard.html");
+                return;
+            }
+            
+            // IF THEY PASS: Remove the secure loading overlay so they can see the app
+            const overlay = document.getElementById("auth-guard-overlay");
+            if (overlay) overlay.remove();
+
+            // Load the Patient App normally!
+            DataService.init(uid);
+            ProfileService.init(user);
+            NotificationSystem.setUser(uid);
+            setSharingPatientId(uid);
+        });
     });
 });
