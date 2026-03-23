@@ -95,6 +95,41 @@ function showInAppBanner(message, level = "info") {
     setTimeout(() => banner.remove(), 4500);
 }
 
+function showToast(message, type = "success") {
+    // Create the toast element
+    const toast = document.createElement("div");
+    
+    // Apply DoseWise glassmorphism and tailwind styles with a slide-up animation
+    toast.className = `fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl border flex items-center gap-2.5 z-[9999] transition-all duration-300 transform translate-y-10 opacity-0 ${
+        type === "success" 
+            ? "bg-emerald-50/90 border-emerald-200 text-emerald-800" 
+            : "bg-rose-50/90 border-rose-200 text-rose-800"
+    }`;
+
+    // Add Phosphor icons based on success/error
+    const icon = type === "success" 
+        ? `<i class="ph-fill ph-check-circle text-xl text-emerald-500"></i>`
+        : `<i class="ph-fill ph-warning-circle text-xl text-rose-500"></i>`;
+        
+    toast.innerHTML = `${icon} <span class="font-medium text-sm tracking-wide">${message}</span>`;
+
+    // Add to screen
+    document.body.appendChild(toast);
+
+    // Trigger the slide-in animation
+    requestAnimationFrame(() => {
+        toast.classList.remove("translate-y-10", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+    });
+
+    // Remove smoothly after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("translate-y-10", "opacity-0");
+        setTimeout(() => toast.remove(), 300); 
+    }, 3000);
+}
+
 function getTodayKey() {
     return getDateKey(new Date());
 }
@@ -1428,28 +1463,27 @@ function setSharingPatientId(uid) {
 }
 
 async function copySharingPatientId() {
-    const idInput = document.getElementById("my-patient-id");
-    const raw = idInput ? String(idInput.value || "").trim() : "";
-    if (!raw) {
-        showInAppBanner("Patient ID is empty.", "warning");
+    const fullId = ProfileService.uid;
+
+    if (!fullId || fullId === "guest") {
+        showToast("Patient ID is not available yet.", "error");
         return;
     }
 
     try {
         if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(raw);
-        } else if (idInput) {
-            idInput.focus();
-            idInput.select();
-            document.execCommand("copy");
-            idInput.setSelectionRange(0, 0);
-            idInput.blur();
+            await navigator.clipboard.writeText(fullId);
         } else {
-            throw new Error("No input available");
+            const tempInput = document.createElement("input");
+            tempInput.value = fullId;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
         }
-        showInAppBanner("Patient ID copied.", "info");
+        showToast("Full Patient ID copied!", "success");
     } catch (error) {
-        showInAppBanner("Unable to copy. Please copy manually.", "warning");
+        showToast("Unable to copy. Please copy manually.", "error");
     }
 }
 

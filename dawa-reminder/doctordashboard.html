@@ -71,6 +71,71 @@
         .doctor-recent-item:hover { background: rgba(255, 255, 255, 0.9); border-color: var(--color-mydocto-teal); transform: translateX(4px); }
         .doctor-recent-name { font-weight: 700; color: #1e293b; }
         .doctor-recent-id { font-size: 0.8rem; color: #64748b; }
+        
+        /* =======================================================
+           WEEKLY REPORT CHART (Glassmorphism Adapted)
+           ======================================================= */
+        .doctor-weekly-chart { display: flex; flex-direction: column; gap: 12px; }
+        
+        .doctor-weekly-row { 
+            display: grid; 
+            grid-template-columns: 82px 1fr 96px; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        
+        .doctor-weekly-date { 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            color: #1e293b; 
+        }
+        
+        /* The empty background track of the progress bar */
+        .doctor-weekly-track { 
+            height: 14px; 
+            width: 100%; 
+            border-radius: 999px; 
+            background: rgba(255, 255, 255, 0.4); /* Glass track */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            overflow: hidden; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* The filled colored bar */
+        .doctor-weekly-bar { 
+            height: 100%; 
+            border-radius: 999px; 
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        /* Vibrant gradients with soft glowing shadows to pop on glass */
+        .doctor-weekly-bar.good { 
+            background: linear-gradient(90deg, #059669 0%, #10b981 100%); 
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+        .doctor-weekly-bar.mid { 
+            background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%); 
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        .doctor-weekly-bar.low { 
+            background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%); 
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+        
+        .doctor-weekly-value { 
+            text-align: right; 
+            font-size: 0.8rem; 
+            color: #475569; 
+            font-weight: 700; 
+        }
+
+        /* Mobile adjustment for the chart */
+        @media (max-width: 767px) {
+            .doctor-weekly-row {
+                grid-template-columns: 68px 1fr 88px;
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-[#e0e7ff] to-[#dbeafe] text-slate-800 font-['Poppins'] antialiased min-h-screen relative doctor-dashboard-page">
